@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String password;
     private String email;
