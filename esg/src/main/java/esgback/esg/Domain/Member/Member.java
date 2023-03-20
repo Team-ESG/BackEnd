@@ -1,6 +1,6 @@
-package Domain.Member;
+package esgback.esg.Domain.Member;
 
-import Domain.Enum.Sex;
+import esgback.esg.Domain.Enum.Sex;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

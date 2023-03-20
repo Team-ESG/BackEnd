@@ -1,7 +1,7 @@
-package Domain.Alarm;
+package esgback.esg.Domain.Alarm;
 
-import Domain.Enum.State;
-import Domain.Member.Member;
+import esgback.esg.Domain.Enum.State;
+import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

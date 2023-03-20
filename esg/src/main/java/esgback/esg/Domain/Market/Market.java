@@ -1,6 +1,6 @@
-package Domain.Market;
+package esgback.esg.Domain.Market;
 
-import Domain.Member.Address;
+import esgback.esg.Domain.Member.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

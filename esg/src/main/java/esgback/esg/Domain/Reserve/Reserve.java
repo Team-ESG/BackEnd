@@ -1,29 +1,30 @@
-package Domain.Notice;
+package esgback.esg.Domain.Reserve;
 
-import Domain.Enum.State;
-import Domain.Member.Member;
+import esgback.esg.Domain.Enum.State;
+import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Read {
+public class Reserve {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne
-    @JoinColumn(name = "notice_id")
-    private Notice notice;
+    @OneToMany
+    @JoinColumn(name = "reservedItem_id")
+    private List<ReservedItem> reservedItems;
 
-    private Date readDate;
-    private State isRead;
+    private Date reserveDate;
+    private State isSuccess;
 }

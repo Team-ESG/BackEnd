@@ -1,26 +1,32 @@
-package Domain.Wish;
+package esgback.esg.Domain.Purchase;
 
-import Domain.Member.Member;
+import esgback.esg.Domain.Enum.State;
+import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Wish {
+public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    @JoinColumn(name = "wishedItem_id")
-    private List<WishedItem> wishedItems;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    private Date purchaseDate;
+
+    @OneToMany
+    @JoinColumn(name = "purchaseItem_id")
+    private List<PurchaseItem> purchaseItems;
+
+    private State isSuccess;
 }

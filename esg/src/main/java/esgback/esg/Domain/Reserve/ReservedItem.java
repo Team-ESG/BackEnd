@@ -1,22 +1,27 @@
-package Domain.Wish;
+package esgback.esg.Domain.Reserve;
 
-import Domain.Item.Item;
+import esgback.esg.Domain.Item.Item;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WishedItem {
+@Getter
+public class ReservedItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "reserve_id")
+    private Reserve reserve;
 
     @OneToOne
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private Date wishedItemDate;
+    private int quantity;
+    private int price;
 }

@@ -1,6 +1,6 @@
-package Domain.ShoppingCart;
+package esgback.esg.Domain.ShoppingCart;
 
-import Domain.Member.Member;
+import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

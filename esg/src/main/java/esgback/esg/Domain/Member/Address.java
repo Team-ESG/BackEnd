@@ -1,4 +1,4 @@
-package Domain.Member;
+package esgback.esg.Domain.Member;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

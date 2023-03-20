@@ -1,4 +1,4 @@
-package Domain.Notice;
+package esgback.esg.Domain.Notice;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
