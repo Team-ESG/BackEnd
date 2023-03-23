@@ -17,8 +17,8 @@ public class Wish {
     private Long id;
 
     @OneToMany
-    @JoinColumn(name = "wishedItem_id")
-    private List<WishedItem> wishedItems;
+    @JoinColumn(name = "wishedMarket_id")
+    private List<WishedMarket> wishedMarkets;
 
     @OneToOne
     @JoinColumn(name = "member_id")
