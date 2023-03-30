@@ -3,7 +3,6 @@ package esgback.esg.Domain.Member;
 import esgback.esg.DTO.MemberJoinDto;
 import esgback.esg.Domain.Enum.Sex;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +10,14 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String password;
-    private String email;
+    private String memberId;
     private String name;
     private String nickName;
     private Role role;
@@ -31,8 +30,8 @@ public class Member {
     private String phoneNumber;
 
     @Builder
-    public Member(String email, String password, String name, String nickName, Role role, Address address, Sex sex, Date birthDate, String phoneNumber){
-        this.email = email;
+    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, Date birthDate, String phoneNumber){
+        this.memberId = memberId;
         this.password = password;
         this.name = name;
         this.nickName = nickName;
@@ -45,7 +44,7 @@ public class Member {
 
     public static Member createMember(MemberJoinDto memberJoinDto) {
         Member member = Member.builder()
-                .email(memberJoinDto.getEmail())
+                .memberId(memberJoinDto.getMemberId())
                 .password(memberJoinDto.getPassword())
                 .name(memberJoinDto.getName())
                 .nickName(memberJoinDto.getNickname())
