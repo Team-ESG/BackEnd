@@ -14,7 +14,7 @@ import java.util.Date;
 public class MemberJoinDto {
 
     @NotEmpty
-    private String email;
+    private String memberId;
 
     @NotEmpty
     private String password;
@@ -37,8 +37,8 @@ public class MemberJoinDto {
     private String phoneNumber;
 
     @Builder
-    public MemberJoinDto(String email, String password, String name, String nickname, Address address, Sex sex, Date birthDate, String phoneNumber){
-        this.email = email;
+    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, Date birthDate, String phoneNumber){
+        this.memberId = memberId;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
