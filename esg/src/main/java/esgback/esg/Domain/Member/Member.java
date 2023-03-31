@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -25,12 +25,12 @@ public class Member {
     @Embedded
     private Address address;
     private Sex sex;
-    private Date birthDate;
+    private LocalDate birthDate;
     private int discountPrice = 0;
     private String phoneNumber;
 
     @Builder
-    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, Date birthDate, String phoneNumber){
+    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, String phoneNumber){
         this.memberId = memberId;
         this.password = password;
         this.name = name;
@@ -51,6 +51,7 @@ public class Member {
                 .role(Role.ROLE_MEMBER)
                 .address(memberJoinDto.getAddress())
                 .sex(memberJoinDto.getSex())
+                .birthDate(memberJoinDto.getBirthDate())
                 .phoneNumber(memberJoinDto.getPhoneNumber())
                 .build();
 
