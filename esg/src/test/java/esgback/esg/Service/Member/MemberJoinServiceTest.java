@@ -22,8 +22,8 @@ class MemberJoinServiceTest {
 
     @Test
     void checkIdDuplicate() {
-        Boolean success = memberJoinService.checkIdDuplicate("user1");
-        Boolean fail = memberJoinService.checkIdDuplicate("user0");
+        Boolean success = memberJoinService.checkIdDuplicate("member01");
+        Boolean fail = memberJoinService.checkIdDuplicate("memememem");
 
         Assertions.assertThat(success).isEqualTo(true); // 동일한 값이 있어야 함
         Assertions.assertThat(fail).isEqualTo(false); // 동일한 값이 없어야 함
@@ -32,8 +32,8 @@ class MemberJoinServiceTest {
 
     @Test
     void checkNickNameDuplicate() {
-        Boolean success = memberJoinService.checkNickNameDuplicate("hong123");
-        Boolean fail = memberJoinService.checkNickNameDuplicate("dong123");
+        Boolean success = memberJoinService.checkNickNameDuplicate("kim");
+        Boolean fail = memberJoinService.checkNickNameDuplicate("kkim");
 
         Assertions.assertThat(success).isEqualTo(true); // 동일한 값이 있어야 함
         Assertions.assertThat(fail).isEqualTo(false); // 동일한 값이 있어야 함
