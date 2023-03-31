@@ -30,6 +30,6 @@ public class MemberJoinService {
     public void joinMember(MemberJoinDto memberJoinDto) {//회원가입
         Member member = Member.createMember(memberJoinDto);
 
-        memberRepository.save(member);
+        memberRepository.save(member);//true => 이미 존재, false => 등록 가능
     }
 }
