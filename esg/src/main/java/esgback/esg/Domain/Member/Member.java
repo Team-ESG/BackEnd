@@ -42,7 +42,7 @@ public class Member {
         this.phoneNumber = phoneNumber;
     }
 
-    public static Member createMember(MemberJoinDto memberJoinDto) {
+    public static Member createMember(MemberJoinDto memberJoinDto) {//dto -> entity로 변환
         Member member = Member.builder()
                 .memberId(memberJoinDto.getMemberId())
                 .password(memberJoinDto.getPassword())
