@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -35,4 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
+application.yml
 .DS_Store
+
