@@ -39,6 +39,6 @@ out/
 .DS_Store
 
 ## develop enviornment
-application.yml
+src/main/resources/application-API-KEY.properties
 .DS_Store
 
