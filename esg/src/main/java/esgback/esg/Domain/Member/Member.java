@@ -20,10 +20,12 @@ public class Member {
     private String memberId;
     private String name;
     private String nickName;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Embedded
     private Address address;
+    @Enumerated(EnumType.STRING)
     private Sex sex;
     private LocalDate birthDate;
     private int discountPrice = 0;
@@ -42,10 +44,10 @@ public class Member {
         this.phoneNumber = phoneNumber;
     }
 
-    public static Member createMember(MemberJoinDto memberJoinDto) {//dto -> entity로 변환
+    public static Member createMember(MemberJoinDto memberJoinDto, String encodePassword) {//dto -> entity로 변환
         Member member = Member.builder()
                 .memberId(memberJoinDto.getMemberId())
-                .password(memberJoinDto.getPassword())
+                .password(encodePassword)
                 .name(memberJoinDto.getName())
                 .nickName(memberJoinDto.getNickname())
                 .role(Role.ROLE_MEMBER)
