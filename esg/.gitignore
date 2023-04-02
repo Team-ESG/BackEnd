@@ -36,6 +36,6 @@ out/
 
 ### VS Code ###
 .vscode/
-
-## develop enviornment
 application.yml
+.DS_Store
+
