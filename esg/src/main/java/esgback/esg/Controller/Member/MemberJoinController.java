@@ -3,6 +3,7 @@ package esgback.esg.Controller.Member;
 import esgback.esg.DTO.MemberJoinDto;
 import esgback.esg.Service.Member.MemberJoinService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,25 +14,25 @@ public class MemberJoinController {
     private final MemberJoinService memberJoinService;
 
     @GetMapping("/id/{id}")
-    public String checkIdDuplicate(@PathVariable  String id) {
+    public ResponseEntity<String> checkIdDuplicate(@PathVariable  String id) {
         Boolean checkIdDuplicate = memberJoinService.checkIdDuplicate(id);
 
         if(checkIdDuplicate)
-            return "duplicate";
+            return new ResponseEntity<>("Duplicate", HttpStatus.CONFLICT);
 
         else
-            return "available";
+            return new ResponseEntity<>("Available", HttpStatus.OK);
     }
 
     @GetMapping("/nickName/{nickName}")
-    public String checkNickNameDuplicate(@PathVariable  String nickName) {
+    public ResponseEntity<String> checkNickNameDuplicate(@PathVariable  String nickName) {
         Boolean checkIdDuplicate = memberJoinService.checkNickNameDuplicate(nickName);
 
         if(checkIdDuplicate)
-            return "duplicate";
+            return new ResponseEntity<>("Duplicate", HttpStatus.CONFLICT);
 
         else
-            return "available";
+            return new ResponseEntity<>("Available", HttpStatus.OK);
     }
 
     @PostMapping("/join")
