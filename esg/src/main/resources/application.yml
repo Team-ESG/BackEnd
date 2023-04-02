@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: API-KEY
   sql:
     init:
       mode: always
