@@ -14,7 +14,9 @@ import java.util.Random;
 
 @Service
 public class MessageService {
-    private DefaultMessageService post;
+    private final DefaultMessageService post;
+    @Value("${SEND_NUM}")
+    String sendFrom;
 
     public MessageService(@Value("${COOL_SMS_API_KEY}") String api_key, @Value("${COOL_SMS_API_SECRET}") String api_secret) {
         this.post = NurigoApp.INSTANCE.initialize(api_key, api_secret, "https://api.coolsms.co.kr");
@@ -23,22 +25,20 @@ public class MessageService {
     public String sendOneMsg(String num) {
         Message message = new Message();
         String sendNum = makeRandom();
-        Boolean isSend = checkNum(num);
+        String isSend = checkNum(num);
 
-        if (!isSend) {
-            throw new IllegalStateException("번호를 다시 입력하세요");
+        if (isSend != "ok") {
+            return isSend;
         }
 
-        message.setFrom("01067939330");
+        message.setFrom(sendFrom);
         message.setTo(num);
         message.setText("인증코드는 " + sendNum);
 
 
         SingleMessageSentResponse response = post.sendOne(new SingleMessageSendingRequest(message));
 
-        System.out.println(response);
-
-        return "test";
+        return sendNum;
     }
 
     public String makeRandom() {
@@ -46,22 +46,25 @@ public class MessageService {
         StringBuilder randNum = new StringBuilder();
 
         for (int i = 0; i <= 3; i++) {
-            randNum.append(Integer.toString(random.nextInt()));
+            randNum.append(random.nextInt(10));
         }
 
         return randNum.toString();
     }
 
-    public Boolean checkNum(String num) {
+    public String checkNum(String num) {
 
-        if(num.length()>11)
-            return false;
+        if (num.length() < 11) {
+            return "전화번호 길이가 너무 짧습니다.";
+        } else if (num.length() > 11) {
+            return "전화번호 길이가 너무 깁니다.";
+        }
 
         for (int i = 0; i < num.length(); i++) {
             if((int)num.charAt(i) < 48 | (int)num.charAt(i) >57)
-                return false;
+                return "특수문자 (-) 입력하지 않아도 됩니다.";
         }
 
-        return true;
+        return "ok";
     }
 }
