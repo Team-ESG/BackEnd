@@ -31,7 +31,7 @@ public class MessageService {
             return isSend;
         }
 
-        message.setFrom(sendFrom);
+        message.setFrom("01067939330");
         message.setTo(num);
         message.setText("인증코드는 " + sendNum);
 
