@@ -48,8 +48,11 @@ public class MemberJoinController {
 
     @GetMapping("/register/send")
     public ResponseEntity<String> sendPhoneMSG(@RequestBody Map<String, String> phone) {
-        String s = messageService.sendOneMsg(phone.get("phone"));
+        String compareCode = messageService.sendOneMsg(phone.get("phone")); //4자리 인증번호
 
-        return new ResponseEntity<>("test", HttpStatus.OK);
+        if(compareCode.matches(".*[0-9].*"))
+            return new ResponseEntity<>(compareCode, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(compareCode, HttpStatus.BAD_REQUEST);
     }
 }
