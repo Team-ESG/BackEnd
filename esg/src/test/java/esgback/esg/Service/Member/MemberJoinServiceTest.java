@@ -41,7 +41,6 @@ class MemberJoinServiceTest {
 
     @Test
     void joinMember() {
-        Date date = new Date();
 
         Address address = Address.builder()
                 .firstAddr("경기도")
@@ -56,7 +55,7 @@ class MemberJoinServiceTest {
                 .nickname("테스터훈")
                 .address(address)
                 .sex(Sex.MAN)
-                .birthDate(date)
+                .birthDate("19990123")
                 .phoneNumber("010-1234-1234")
                 .build();
 
