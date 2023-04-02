@@ -36,6 +36,9 @@ out/
 
 ### VS Code ###
 .vscode/
-application.yml
+.DS_Store
+
+## develop enviornment
+src/main/resources/application-API-KEY.properties
 .DS_Store
 
