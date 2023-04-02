@@ -5,6 +5,7 @@ import esgback.esg.Domain.Member.Address;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,11 @@ public class MemberJoinService {
     }
 
     public void joinMember(MemberJoinDto memberJoinDto) {//회원가입
-        Member member = Member.createMember(memberJoinDto);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encodePassword = bCryptPasswordEncoder.encode(memberJoinDto.getPassword());
 
-        memberRepository.save(member);//true => 이미 존재, false => 등록 가능
+        Member member = Member.createMember(memberJoinDto, encodePassword);
+
+        memberRepository.save(member);
     }
 }
