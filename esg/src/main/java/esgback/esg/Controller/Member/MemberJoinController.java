@@ -13,7 +13,7 @@ public class MemberJoinController {
 
     private final MemberJoinService memberJoinService;
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/register/check/id/{id}")
     public ResponseEntity<String> checkIdDuplicate(@PathVariable  String id) {
         Boolean checkIdDuplicate = memberJoinService.checkIdDuplicate(id);
 
@@ -24,9 +24,9 @@ public class MemberJoinController {
             return new ResponseEntity<>("Available", HttpStatus.OK);
     }
 
-    @GetMapping("/nickName/{nickName}")
-    public ResponseEntity<String> checkNickNameDuplicate(@PathVariable  String nickName) {
-        Boolean checkIdDuplicate = memberJoinService.checkNickNameDuplicate(nickName);
+    @GetMapping("/register/check/nickname/{nickname}")
+    public ResponseEntity<String> checkNickNameDuplicate(@PathVariable  String nickname) {
+        Boolean checkIdDuplicate = memberJoinService.checkNickNameDuplicate(nickname);
 
         if(checkIdDuplicate)
             return new ResponseEntity<>("Duplicate", HttpStatus.CONFLICT);
@@ -35,7 +35,7 @@ public class MemberJoinController {
             return new ResponseEntity<>("Available", HttpStatus.OK);
     }
 
-    @PostMapping("/join")
+    @PostMapping("/register")
     public ResponseEntity<Object> joinMember(@RequestBody MemberJoinDto memberJoinDto) {
         memberJoinService.joinMember(memberJoinDto);
 
