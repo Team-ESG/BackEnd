@@ -1,7 +1,7 @@
-package esgback.esg.Controller;
+package esgback.esg.Controller.Market;
 
 import esgback.esg.DTO.MarketDto;
-import esgback.esg.Service.MarketService;
+import esgback.esg.Service.Market.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
