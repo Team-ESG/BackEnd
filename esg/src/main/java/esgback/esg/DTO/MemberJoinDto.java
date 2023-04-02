@@ -45,7 +45,7 @@ public class MemberJoinDto {
         this.nickname = nickname;
         this.address = address;
         this.sex = sex;
-        this.birthDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("yyyymmdd"));
+        this.birthDate = LocalDate.parse(birthDate);
         this.phoneNumber = phoneNumber;
     }
 }
