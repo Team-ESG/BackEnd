@@ -40,3 +40,5 @@ out/
 
 ## develop enviornment
 application.yml
+.DS_Store
+

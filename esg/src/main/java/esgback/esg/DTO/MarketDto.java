@@ -1,19 +1,16 @@
-package esgback.esg.Domain.Market;
+package esgback.esg.DTO;
 
+import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Address;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-public class Market {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+import java.io.Serializable;
 
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MarketDto implements Serializable {
     private String email;
     private String password;
     private String phoneNumber;
@@ -21,8 +18,7 @@ public class Market {
     private Address address;
     private String ownerName;
 
-    public Market(Long id, String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName) {
-        this.id = id;
+    public MarketDto(String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName) {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
