@@ -55,7 +55,7 @@ class MemberJoinServiceTest {
                 .nickname("테스터훈")
                 .address(address)
                 .sex(Sex.MAN)
-                .birthDate("19990123")
+                .birthDate("1999-01-23")
                 .phoneNumber("010-1234-1234")
                 .build();
 
