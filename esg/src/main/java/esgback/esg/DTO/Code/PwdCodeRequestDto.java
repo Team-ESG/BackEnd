@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class CodeRequestDto {
+public class PwdCodeRequestDto {
 
+    private String id;
     private String phone;
-    private String code;
 
     @Builder
-    public CodeRequestDto(String phone, String code) {
+    public PwdCodeRequestDto(String id, String phone) {
+        this.id = id;
         this.phone = phone;
-        this.code = code;
     }
 }
