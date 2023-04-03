@@ -1,9 +1,10 @@
 package esgback.esg.Controller.Member;
 
+import esgback.esg.DTO.Code.CodeResponseDto;
+import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Member.MemberIdDto;
-import esgback.esg.DTO.Member.MemberPwdDto;
 import esgback.esg.DTO.Response;
-import esgback.esg.DTO.codeDto;
+import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.Service.Member.MemberInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,16 +33,16 @@ public class MemberInfoController {
     }//회원 아이디 찾기
 
     @GetMapping("/info/pwd")
-    public ResponseEntity<?> getMemberPwd(@RequestBody MemberPwdDto memberPwdDto) {
+    public ResponseEntity<?> getMemberPwd(@RequestBody PwdCodeRequestDto pwdCodeRequestDto) {
 
         try {
-            codeDto code = memberInfoService.resetPassword(memberPwdDto);
+            CodeResponseDto code = memberInfoService.resetPassword(pwdCodeRequestDto);
 
             return response.success(code, "success", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }//회원 비밀번호 초기화
+    }//회원 비밀번호 초기화를 위한 코드 번호 발급
 //
 //    @PostMapping("/info/reset/pwd")
 //    public ResponseEntity<?> resetMemberPwd() {
