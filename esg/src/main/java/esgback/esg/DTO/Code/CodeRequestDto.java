@@ -1,4 +1,4 @@
-package esgback.esg.DTO.Member;
+package esgback.esg.DTO;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class MemberPwdDto {
+public class CodeDto {
 
-    private String id;
     private String phone;
+    private String code;
 
     @Builder
-    public MemberPwdDto(String id, String phone) {
-        this.id = id;
+    public CodeDto(String phone, String code) {
         this.phone = phone;
+        this.code = code;
     }
 }
