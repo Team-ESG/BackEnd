@@ -1,4 +1,4 @@
-package esgback.esg.DTO;
+package esgback.esg.DTO.Member;
 
 import esgback.esg.Domain.Enum.Sex;
 import esgback.esg.Domain.Member.Address;
