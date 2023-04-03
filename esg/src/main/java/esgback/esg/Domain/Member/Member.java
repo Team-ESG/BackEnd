@@ -1,6 +1,6 @@
 package esgback.esg.Domain.Member;
 
-import esgback.esg.DTO.MemberJoinDto;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Domain.Enum.Sex;
 import jakarta.persistence.*;
 import lombok.Builder;
