@@ -1,6 +1,6 @@
 package esgback.esg.Controller.Member;
 
-import esgback.esg.DTO.MemberJoinDto;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Service.Member.MemberJoinService;
 import esgback.esg.Service.Member.MessageService;
 import lombok.RequiredArgsConstructor;
