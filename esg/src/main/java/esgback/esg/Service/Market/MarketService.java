@@ -1,4 +1,4 @@
-package esgback.esg.Service;
+package esgback.esg.Service.Market;
 
 import esgback.esg.DTO.MarketDto;
 import esgback.esg.Domain.Market.Market;
