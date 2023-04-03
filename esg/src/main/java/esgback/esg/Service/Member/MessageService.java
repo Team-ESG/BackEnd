@@ -7,14 +7,22 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Random;
 
 @Service
 public class MessageService {
     private final DefaultMessageService post;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     @Value("${SEND_NUM}")
     String sendFrom;
 
@@ -35,6 +43,9 @@ public class MessageService {
         message.setTo(num);
         message.setText("인증코드는 " + sendNum);
 
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+
+        vop.set(num, sendNum, Duration.ofSeconds(300));//redis에 값 저장, 5분 이내
 
         SingleMessageSentResponse response = post.sendOne(new SingleMessageSendingRequest(message));
 

@@ -1,11 +1,15 @@
 package esgback.esg.Service.Member;
 
+import esgback.esg.DTO.Code.CodeResponseDto;
+import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Member.MemberIdDto;
-import esgback.esg.DTO.Member.MemberPwdDto;
-import esgback.esg.DTO.codeDto;
+import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -15,6 +19,9 @@ import java.util.Random;
 public class MemberInfoService {
 
     private final MemberRepository memberRepository;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     public MemberIdDto checkPhoneNum(String phone) {
         Member member = memberRepository.findByPhoneNumber(phone);
@@ -30,12 +37,12 @@ public class MemberInfoService {
         return id;
     }
 
-    public codeDto resetPassword(MemberPwdDto memberPwdDto) {
-        Member member = memberRepository.findByMemberId(memberPwdDto.getId());
+    public CodeResponseDto resetPassword(PwdCodeRequestDto pwdCodeRequestDto) {
+        Member member = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
 
         if (member == null) {
             throw new IllegalArgumentException("해당 아이디는 존재하지 않습니다.");
-        } else if (!member.getPhoneNumber().equals(memberPwdDto.getPhone())) {
+        } else if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
             throw new IllegalArgumentException("유저 정보의 휴대폰 번호와 일치하지 않습니다.");
         }else {
             Random random = new Random();
@@ -45,11 +52,28 @@ public class MemberInfoService {
                 randNum.append(random.nextInt(10));
             }
 
-            codeDto code = codeDto.builder()
+            CodeResponseDto code = CodeResponseDto.builder()
                     .code(randNum.toString())
                     .build();
             return code;
         }
+    }
+
+    public String testCode(CodeRequestDto codeRequestDto) {
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+
+        String issueCode = vop.get(codeRequestDto.getPhone());
+
+        if (issueCode == null) {
+            throw new IllegalArgumentException("인증시간이 만료되었습니다.");
+        }else {
+            if (!codeRequestDto.getCode().equals(issueCode)) {
+                throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
+            }else{
+                return "인증이 완료되었습니다.";
+            }
+        }
+
     }
 
 }
