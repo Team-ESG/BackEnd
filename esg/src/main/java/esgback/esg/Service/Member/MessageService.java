@@ -31,7 +31,7 @@ public class MessageService {
             return isSend;
         }
 
-        message.setFrom("01067939330");
+        message.setFrom(sendFrom);//error: 번호 직접 작성하면 되고, 변수로 설정하면 안됨
         message.setTo(num);
         message.setText("인증코드는 " + sendNum);
 
