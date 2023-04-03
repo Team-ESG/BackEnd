@@ -1,18 +1,12 @@
 package esgback.esg.Service.Member;
 
-import esgback.esg.DTO.MemberJoinDto;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Domain.Enum.Sex;
 import esgback.esg.Domain.Member.Address;
-import esgback.esg.Domain.Member.Member;
-import esgback.esg.Repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MemberJoinServiceTest {
