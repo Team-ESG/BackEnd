@@ -1,6 +1,6 @@
 package esgback.esg.Controller.Market;
 
-import esgback.esg.DTO.MarketDto;
+import esgback.esg.DTO.Market.MarketDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Market.MarketService;
 import lombok.RequiredArgsConstructor;

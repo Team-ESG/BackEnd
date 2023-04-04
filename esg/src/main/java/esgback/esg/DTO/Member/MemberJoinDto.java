@@ -1,4 +1,4 @@
-package esgback.esg.DTO;
+package esgback.esg.DTO.Member;
 
 import esgback.esg.Domain.Enum.Sex;
 import esgback.esg.Domain.Member.Address;
@@ -38,7 +38,7 @@ public class MemberJoinDto {
     private String phoneNumber;
 
     @Builder
-    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber){
+    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber) {
         this.memberId = memberId;
         this.password = password;
         this.name = name;

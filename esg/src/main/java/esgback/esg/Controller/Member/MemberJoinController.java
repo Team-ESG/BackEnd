@@ -1,6 +1,6 @@
 package esgback.esg.Controller.Member;
 
-import esgback.esg.DTO.MemberJoinDto;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Service.Member.MemberJoinService;
 import esgback.esg.Service.Member.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class MemberJoinController {
     public ResponseEntity<String> sendPhoneMSG(@RequestBody Map<String, String> phone) {
         String compareCode = messageService.sendOneMsg(phone.get("phone")); //4자리 인증번호
 
-        if(compareCode.matches(".*[0-9].*"))
+        if (compareCode.matches(".*[0-9].*"))
             return new ResponseEntity<>(compareCode, HttpStatus.OK);
         else
             return new ResponseEntity<>(compareCode, HttpStatus.BAD_REQUEST);

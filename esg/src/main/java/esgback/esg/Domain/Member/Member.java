@@ -1,6 +1,6 @@
 package esgback.esg.Domain.Member;
 
-import esgback.esg.DTO.MemberJoinDto;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Domain.Enum.Sex;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 public class Member {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String password;
@@ -32,7 +33,7 @@ public class Member {
     private String phoneNumber;
 
     @Builder
-    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, String phoneNumber){
+    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, String phoneNumber) {
         this.memberId = memberId;
         this.password = password;
         this.name = name;
