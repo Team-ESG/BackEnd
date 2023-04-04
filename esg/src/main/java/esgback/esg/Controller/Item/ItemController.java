@@ -1,8 +1,8 @@
 package esgback.esg.Controller.Item;
 
-import esgback.esg.DTO.ItemDto;
+import esgback.esg.DTO.Item.ItemDto;
 import esgback.esg.DTO.Response;
-import esgback.esg.DTO.SimpleItemDto;
+import esgback.esg.DTO.Item.SimpleItemDto;
 import esgback.esg.Service.Item.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

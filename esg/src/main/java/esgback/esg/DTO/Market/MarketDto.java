@@ -1,4 +1,4 @@
-package esgback.esg.DTO;
+package esgback.esg.DTO.Market;
 
 import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Address;

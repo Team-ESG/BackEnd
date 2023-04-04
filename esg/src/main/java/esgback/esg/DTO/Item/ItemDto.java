@@ -1,4 +1,4 @@
-package esgback.esg.DTO;
+package esgback.esg.DTO.Item;
 
 import esgback.esg.Domain.Market.Market;
 import lombok.AllArgsConstructor;

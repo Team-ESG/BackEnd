@@ -1,7 +1,6 @@
 package esgback.esg.Service.Item;
 
-import esgback.esg.DTO.ItemDto;
-import esgback.esg.DTO.SimpleItemDto;
+import esgback.esg.DTO.Item.ItemDto;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
