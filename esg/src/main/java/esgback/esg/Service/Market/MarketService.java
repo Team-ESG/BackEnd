@@ -16,6 +16,6 @@ public class MarketService {
     public MarketDto searchById(Long id) {
         Market market = marketRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 가게는 존재하지 않습니다."));
 
-        return new MarketDto(market.getEmail(), market.getPassword(), market.getPhoneNumber(), market.getPhotoUrl(), market.getAddress(), market.getOwnerName());
+        return new MarketDto(market.getName(), market.getPhoneNumber(), market.getPhotoUrl(), market.getAddress(), market.getOwnerName(), market.getStartTime(), market.getEndTime(), market.getItems().size());
     }
 }

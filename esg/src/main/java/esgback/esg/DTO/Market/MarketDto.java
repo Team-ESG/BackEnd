@@ -1,29 +1,35 @@
 package esgback.esg.DTO.Market;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Address;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class MarketDto implements Serializable {
-    private String email;
-    private String password;
+    private String name;
     private String phoneNumber;
     private String photoUrl;
     private Address address;
     private String ownerName;
 
-    public MarketDto(String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName) {
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.photoUrl = photoUrl;
-        this.address = address;
-        this.ownerName = ownerName;
-    }
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalDateTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalDateTime endTime;
+
+    private int itemQuantity;
 }
