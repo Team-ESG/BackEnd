@@ -23,7 +23,7 @@ public class MemberInfoService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    public MemberIdDto checkPhoneNum(String phone) {
+    public MemberIdDto findId(String phone) {//아이디 찾기 용도
         Member member = memberRepository.findByPhoneNumber(phone);
 
         if (member == null) {
@@ -37,25 +37,14 @@ public class MemberInfoService {
         return id;
     }
 
-    public CodeResponseDto resetPassword(PwdCodeRequestDto pwdCodeRequestDto) {
+    public void checkResetPwdAvailable(PwdCodeRequestDto pwdCodeRequestDto) {//비밀번호 찾기 전 회원정보 존재 여부
         Member member = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
 
         if (member == null) {
             throw new IllegalArgumentException("해당 아이디는 존재하지 않습니다.");
-        } else if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
+        }
+        else if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
             throw new IllegalArgumentException("유저 정보의 휴대폰 번호와 일치하지 않습니다.");
-        }else {
-            Random random = new Random();
-            StringBuilder randNum = new StringBuilder();
-
-            for (int i = 0; i < 4; i++) {
-                randNum.append(random.nextInt(10));
-            }
-
-            CodeResponseDto code = CodeResponseDto.builder()
-                    .code(randNum.toString())
-                    .build();
-            return code;
         }
     }
 

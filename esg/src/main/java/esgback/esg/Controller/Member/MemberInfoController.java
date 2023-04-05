@@ -1,10 +1,8 @@
 package esgback.esg.Controller.Member;
 
-import esgback.esg.DTO.Code.CodeResponseDto;
 import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Response;
-import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.Service.Member.MemberInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,7 @@ public class MemberInfoController {
     public ResponseEntity<?> getMemberId(@RequestBody Map<String, String> phone) {
 
         try {
-            MemberIdDto memberId = memberInfoService.checkPhoneNum(phone.get("phone"));
+            MemberIdDto memberId = memberInfoService.findId(phone.get("phone"));
 
             return response.success(memberId, "success", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
@@ -32,18 +30,18 @@ public class MemberInfoController {
         }
     }//회원 아이디 찾기
 
-    @GetMapping("/info/pwd")
-    public ResponseEntity<?> getMemberPwd(@RequestBody PwdCodeRequestDto pwdCodeRequestDto) {
+    @GetMapping("/info/check/pwd")
+    public ResponseEntity<?> checkResetPwdAvailable(@RequestBody PwdCodeRequestDto pwdCodeRequestDto) {
 
         try {
-            CodeResponseDto code = memberInfoService.resetPassword(pwdCodeRequestDto);
+            memberInfoService.checkResetPwdAvailable(pwdCodeRequestDto);
 
-            return response.success(code, "success", HttpStatus.OK);
+            return response.success("회원 검증 완료");
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }//회원 비밀번호 초기화를 위한 코드 번호 발급
-//
+    }//회원 비밀번호 초기화 가능한지 검증 => 비밀번호 재설정을 하고 그 다음에 이메일(?), 문자메시지(?)로 전송?
+
 //    @PostMapping("/info/reset/pwd")
 //    public ResponseEntity<?> resetMemberPwd() {
 //
