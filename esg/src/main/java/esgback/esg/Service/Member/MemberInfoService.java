@@ -1,6 +1,5 @@
 package esgback.esg.Service.Member;
 
-import esgback.esg.DTO.Code.CodeResponseDto;
 import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +59,6 @@ public class MemberInfoService {
                 return "인증이 완료되었습니다.";
             }
         }
-
     }
 
 }
