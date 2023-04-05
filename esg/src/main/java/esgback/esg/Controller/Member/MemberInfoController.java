@@ -40,10 +40,10 @@ public class MemberInfoController {
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }//회원 비밀번호 초기화 가능한지 검증 => 비밀번호 재설정을 하고 그 다음에 이메일(?), 문자메시지(?)로 전송?
+    }//회원 비밀번호 초기화 가능한지 검증 => 비밀번호 분실 시, 비밀번호 재설정 자체가 따로 필요해 보임
 
 //    @PostMapping("/info/reset/pwd")
-//    public ResponseEntity<?> resetMemberPwd() {
+//    public ResponseEntity<?> resetMemberPwd() {//
 //
 //    }//회원 비밀번호 재설정
 //
