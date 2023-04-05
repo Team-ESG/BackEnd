@@ -34,7 +34,7 @@ public class MemberJoinController {
 
         else
             return response.success("Avaliable");
-    }
+    }//id 중복확인
 
     @GetMapping("/register/check/nickname/{nickname}")
     public ResponseEntity<?> checkNickNameDuplicate(@PathVariable String nickname) {
@@ -45,16 +45,16 @@ public class MemberJoinController {
 
         else
             return response.success("Avaliable");
-    }
+    }//닉네임 중복확인
 
     @PostMapping("/register")
     public ResponseEntity<?> joinMember(@RequestBody MemberJoinDto memberJoinDto) {
         memberJoinService.joinMember(memberJoinDto);
 
         return response.success("회원가입이 완료되었습니다.");
-    }
+    }//회원가입
 
-    @GetMapping("/register/send")//인증번호 발송
+    @GetMapping("/register/send")
     public ResponseEntity<?> sendPhoneMSG(@RequestBody Map<String, String> phone) {
         try {
             CodeResponseDto codeResponseDto = messageService.sendOneMsg(phone.get("phone"));//6자리 인증번호
@@ -65,7 +65,7 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-    }
+    }//인증번호 발송
 
     @GetMapping("/check/code")
     public ResponseEntity<?> compareCode(@RequestBody CodeRequestDto codeRequestDto) {
@@ -75,5 +75,5 @@ public class MemberJoinController {
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-    }
+    }//인증번호 검증
 }
