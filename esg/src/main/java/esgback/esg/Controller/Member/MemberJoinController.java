@@ -1,10 +1,12 @@
 package esgback.esg.Controller.Member;
 
 import esgback.esg.DTO.Code.CodeRequestDto;
+import esgback.esg.DTO.Code.CodeResponseDto;
 import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Member.MemberInfoService;
 import esgback.esg.Service.Member.MemberJoinService;
+
 import esgback.esg.Service.Member.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,13 +55,16 @@ public class MemberJoinController {
     }
 
     @GetMapping("/register/send")//인증번호 발송
-    public ResponseEntity<String> sendPhoneMSG(@RequestBody Map<String, String> phone) {
-        String compareCode = messageService.sendOneMsg(phone.get("phone")); //4자리 인증번호
+    public ResponseEntity<?> sendPhoneMSG(@RequestBody Map<String, String> phone) {
+        try {
+            CodeResponseDto codeResponseDto = messageService.sendOneMsg(phone.get("phone"));//6자리 인증번호
 
-        if(compareCode.matches(".*[0-9].*"))
-            return new ResponseEntity<>(compareCode, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(compareCode, HttpStatus.BAD_REQUEST);
+            return response.success(codeResponseDto, "메시지 전송 완료", HttpStatus.OK);
+        }
+        catch (IllegalArgumentException e) {
+            return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/check/code")
