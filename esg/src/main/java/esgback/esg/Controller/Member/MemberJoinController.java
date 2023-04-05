@@ -26,32 +26,32 @@ public class MemberJoinController {
     private final Response response;
 
     @GetMapping("/register/check/id/{id}")
-    public ResponseEntity<String> checkIdDuplicate(@PathVariable String id) {
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable String id) {
         Boolean checkIdDuplicate = memberJoinService.checkIdDuplicate(id);
 
         if (checkIdDuplicate)
-            return new ResponseEntity<>("Duplicate", HttpStatus.CONFLICT);
+            return response.fail("Duplicate", HttpStatus.CONFLICT);
 
         else
-            return new ResponseEntity<>("Available", HttpStatus.OK);
+            return response.success("Avaliable");
     }
 
     @GetMapping("/register/check/nickname/{nickname}")
-    public ResponseEntity<String> checkNickNameDuplicate(@PathVariable String nickname) {
+    public ResponseEntity<?> checkNickNameDuplicate(@PathVariable String nickname) {
         Boolean checkIdDuplicate = memberJoinService.checkNickNameDuplicate(nickname);
 
         if (checkIdDuplicate)
-            return new ResponseEntity<>("Duplicate", HttpStatus.CONFLICT);
+            return response.fail("Duplicate", HttpStatus.CONFLICT);
 
         else
-            return new ResponseEntity<>("Available", HttpStatus.OK);
+            return response.success("Avaliable");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> joinMember(@RequestBody MemberJoinDto memberJoinDto) {
+    public ResponseEntity<?> joinMember(@RequestBody MemberJoinDto memberJoinDto) {
         memberJoinService.joinMember(memberJoinDto);
 
-        return ResponseEntity.ok().build();
+        return response.success("회원가입이 완료되었습니다.");
     }
 
     @GetMapping("/register/send")//인증번호 발송
