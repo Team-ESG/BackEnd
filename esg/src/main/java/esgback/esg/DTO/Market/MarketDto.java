@@ -1,29 +1,23 @@
-package esgback.esg.Domain.Market;
+package esgback.esg.DTO.Market;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import esgback.esg.Domain.Item.Item;
+import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Address;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
-@Entity
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-public class Market {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@AllArgsConstructor
+public class MarketDto implements Serializable {
     private String name;
-    private String email;
-    private String password;
     private String phoneNumber;
     private String photoUrl;
     private Address address;
@@ -37,11 +31,5 @@ public class Market {
     @DateTimeFormat(pattern = "HH:mm")
     private LocalDateTime endTime;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "market")
-    private List<Item> items;
-
-    public void addItem(Item item) {
-        items.add(item);
-        item.setMarket(this);
-    }
+    private int itemQuantity;
 }
