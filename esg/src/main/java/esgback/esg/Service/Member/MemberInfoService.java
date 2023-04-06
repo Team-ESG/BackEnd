@@ -1,6 +1,7 @@
 package esgback.esg.Service.Member;
 
 import esgback.esg.DTO.Code.PwdCodeRequestDto;
+import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.Domain.Member.Member;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,6 +61,25 @@ public class MemberInfoService {
                 return "인증이 완료되었습니다.";
             }
         }
+    }
+
+    public void resetPwd(ResetDto resetDto) {
+
+        Member oldMember = memberRepository.findByMemberId(resetDto.getId());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encodePassword = bCryptPasswordEncoder.encode(resetDto.getPwd());
+
+        Member newMember = Member.updatePwd(oldMember, encodePassword);
+
+        memberRepository.save(newMember);
+    }
+
+    public void resetNickname(ResetDto resetDto) {
+
+        Member oldMember = memberRepository.findByMemberId(resetDto.getId());
+        Member newMember = Member.updateNick(oldMember, resetDto.getNickname());
+
+        memberRepository.save(newMember);
     }
 
 }
