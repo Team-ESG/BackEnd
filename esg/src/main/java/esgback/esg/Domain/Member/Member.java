@@ -33,7 +33,8 @@ public class Member {
     private String phoneNumber;
 
     @Builder
-    public Member(String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, String phoneNumber) {
+    public Member(Long id, String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, int discountPrice, String phoneNumber){
+        this.id = id;
         this.memberId = memberId;
         this.password = password;
         this.name = name;
@@ -42,6 +43,7 @@ public class Member {
         this.address = address;
         this.sex = sex;
         this.birthDate = birthDate;
+        this.discountPrice = discountPrice;
         this.phoneNumber = phoneNumber;
     }
 
@@ -59,5 +61,41 @@ public class Member {
                 .build();
 
         return member;
+    }
+
+    public static Member updatePwd(Member member, String encodePassword) {
+        Member newMember = Member.builder()
+                .id(member.getId())
+                .memberId(member.getMemberId())
+                .password(encodePassword)
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .role(member.getRole())
+                .address(member.getAddress())
+                .sex(member.getSex())
+                .birthDate(member.getBirthDate())
+                .discountPrice(member.getDiscountPrice())
+                .phoneNumber(member.getPhoneNumber())
+                .build();
+
+        return newMember;
+    }
+
+    public static Member updateNick(Member member, String nickName) {
+        Member newMember = Member.builder()
+                .id(member.getId())
+                .memberId(member.getMemberId())
+                .password(member.getPassword())
+                .name(member.getName())
+                .nickName(nickName)
+                .role(member.getRole())
+                .address(member.getAddress())
+                .sex(member.getSex())
+                .birthDate(member.getBirthDate())
+                .discountPrice(member.getDiscountPrice())
+                .phoneNumber(member.getPhoneNumber())
+                .build();
+
+        return newMember;
     }
 }
