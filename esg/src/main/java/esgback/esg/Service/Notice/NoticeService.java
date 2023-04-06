@@ -17,4 +17,8 @@ public class NoticeService {
     public List<Notice> getAllNotice() {
         return noticeRepository.findAll();
     }
+
+    public Notice findById(Long id) {
+        return noticeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
+    }
 }
