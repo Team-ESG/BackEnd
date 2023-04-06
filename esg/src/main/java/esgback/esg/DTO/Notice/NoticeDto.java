@@ -1,5 +1,7 @@
 package esgback.esg.DTO.Notice;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
