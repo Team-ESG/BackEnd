@@ -76,9 +76,4 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//인증번호 검증
-        if (compareCode.matches(".*[0-9].*"))
-            return new ResponseEntity<>(compareCode, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(compareCode, HttpStatus.BAD_REQUEST);
-    }
 }
