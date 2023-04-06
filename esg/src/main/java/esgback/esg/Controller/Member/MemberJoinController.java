@@ -5,6 +5,7 @@ import esgback.esg.DTO.Code.CodeResponseDto;
 import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Member.MemberInfoService;
+import esgback.esg.DTO.Member.MemberJoinDto;
 import esgback.esg.Service.Member.MemberJoinService;
 
 import esgback.esg.Service.Member.MessageService;
@@ -58,7 +59,6 @@ public class MemberJoinController {
     public ResponseEntity<?> sendPhoneMSG(@RequestBody Map<String, String> phone) {
         try {
             CodeResponseDto codeResponseDto = messageService.sendOneMsg(phone.get("phone"));//6자리 인증번호
-
             return response.success(codeResponseDto, "메시지 전송 완료", HttpStatus.OK);
         }
         catch (IllegalArgumentException e) {
@@ -76,4 +76,9 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//인증번호 검증
+        if (compareCode.matches(".*[0-9].*"))
+            return new ResponseEntity<>(compareCode, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(compareCode, HttpStatus.BAD_REQUEST);
+    }
 }
