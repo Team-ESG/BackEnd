@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class MemberInfoService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -66,8 +68,7 @@ public class MemberInfoService {
     public void resetPwd(ResetDto resetDto) {
 
         Member oldMember = memberRepository.findByMemberId(resetDto.getId());
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encodePassword = bCryptPasswordEncoder.encode(resetDto.getPwd());
+        String encodePassword = passwordEncoder.encode(resetDto.getPwd());
 
         Member newMember = Member.updatePwd(oldMember, encodePassword);
 
