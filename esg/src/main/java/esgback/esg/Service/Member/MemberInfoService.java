@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberInfoService {
@@ -39,12 +41,11 @@ public class MemberInfoService {
     }
 
     public void checkResetPwdAvailable(PwdCodeRequestDto pwdCodeRequestDto) {//비밀번호 찾기 전 회원정보 존재 여부
-        Member member = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
+        Optional<Member> find = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
 
-        if (member == null) {
-            throw new IllegalArgumentException("해당 아이디는 존재하지 않습니다.");
-        }
-        else if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
+        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
             throw new IllegalArgumentException("유저 정보의 휴대폰 번호와 일치하지 않습니다.");
         }
     }
@@ -67,7 +68,9 @@ public class MemberInfoService {
 
     public void resetPwd(ResetDto resetDto) {
 
-        Member oldMember = memberRepository.findByMemberId(resetDto.getId());
+        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
         String encodePassword = passwordEncoder.encode(resetDto.getPwd());
 
         Member newMember = Member.updatePwd(oldMember, encodePassword);
@@ -76,8 +79,9 @@ public class MemberInfoService {
     }
 
     public void resetNickname(ResetDto resetDto) {
+        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
 
-        Member oldMember = memberRepository.findByMemberId(resetDto.getId());
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
         Member newMember = Member.updateNick(oldMember, resetDto.getNickname());
 
         memberRepository.save(newMember);
