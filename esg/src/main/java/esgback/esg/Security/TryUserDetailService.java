@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,11 +25,11 @@ public class TryUserDetailService implements UserDetailsService {
 
         Member member = find.orElseThrow(() -> new UsernameNotFoundException("해당 아이디는 존재하지 않습니다."));
 
-        MemberLoadUserDto memberLoadUserDto = MemberLoadUserDto.builder()
-                .username(member.getMemberId())
-                .pwd(member.getPassword())
-                .authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
-                .build();
+        MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(
+                member.getMemberId(),
+                member.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
 
         return memberLoadUserDto;
     }
