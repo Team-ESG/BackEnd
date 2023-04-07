@@ -9,12 +9,12 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 @Getter
+@Setter
 public class MemberLoadUserDto extends User {
 
     private String id;
     private String pwd;
 
-    @Builder
     public MemberLoadUserDto(String username, String pwd, Collection<GrantedAuthority> authorities) {
         super(username, pwd, authorities);
         this.id = username;
