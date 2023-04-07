@@ -2,6 +2,7 @@ package esgback.esg.Config;
 
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.TryUserDetailService;
+import esgback.esg.Security.handler.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -63,6 +64,10 @@ public class CustomSecurityConfig {
          * UsernamePasswordAuthenticationFilter는 사용자가 로그인 폼에 입력한 아이디와 비밀번호를 이용하여 UsernamePasswordAuthenticationToken을 생성하고
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
+
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler();
+
+        loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
