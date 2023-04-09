@@ -38,7 +38,7 @@ public class MemberJoinDto {
     private String phoneNumber;
 
     @Builder
-    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber) {
+    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber){
         this.memberId = memberId;
         this.password = password;
         this.name = name;
