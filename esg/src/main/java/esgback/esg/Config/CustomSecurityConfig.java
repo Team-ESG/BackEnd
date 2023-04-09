@@ -96,5 +96,5 @@ public class CustomSecurityConfig{
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }//cors 해결 위함
 }
