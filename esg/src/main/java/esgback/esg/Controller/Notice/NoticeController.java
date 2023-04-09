@@ -30,17 +30,20 @@ public class NoticeController {
         else return response.success(simpleNoticeDtoList);
     }
 
-    @GetMapping("/notice/{notice_id}")
-    public ResponseEntity<?> getNoticeDetail(@PathVariable("notice_id") Long noticeId) {
+    @GetMapping("/notice/{member_id}/{notice_id}")
+    public ResponseEntity<?> getNoticeDetail(@PathVariable("member_id") Long memberId, @PathVariable("notice_id") Long noticeId) {
 
+        // 추후에 session 도입 시 Member의 member_id 삭제 예정
         try {
+            noticeService.readNotice(memberId, noticeId);
+
             Notice notice = noticeService.findById(noticeId);
 
             NoticeDto noticeDto = new NoticeDto(notice.getTitle(), notice.getViewNum(), notice.getWriteDate(), notice.getContent(), notice.getPhotoUrl());
 
             return response.success(noticeDto);
         } catch (IllegalArgumentException e) {
-            return response.fail("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND);
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
