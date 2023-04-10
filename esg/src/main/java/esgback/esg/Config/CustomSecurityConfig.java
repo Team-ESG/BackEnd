@@ -2,6 +2,7 @@ package esgback.esg.Config;
 
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.Filter.AccessTokenCheckFilter;
+import esgback.esg.Security.Filter.RefreshTokenFilter;
 import esgback.esg.Security.TryUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -80,6 +83,8 @@ public class CustomSecurityConfig{
                 tokenCheckFilter(jwtUtil),
                 UsernamePasswordAuthenticationFilter.class
         );
+
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), AccessTokenCheckFilter.class);
 
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
