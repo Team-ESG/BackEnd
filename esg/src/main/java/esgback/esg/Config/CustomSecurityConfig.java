@@ -3,8 +3,8 @@ package esgback.esg.Config;
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.TryUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
+import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +32,7 @@ import java.util.Arrays;
 public class CustomSecurityConfig{
 
     private final TryUserDetailService tryUserDetailService;
+    private final JWTUtil jwtUtil;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,7 +71,7 @@ public class CustomSecurityConfig{
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
 
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler();
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil);
 
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
