@@ -1,6 +1,7 @@
 package esgback.esg.Config;
 
 import esgback.esg.Security.Filter.LoginFilter;
+import esgback.esg.Security.Filter.TokenCheckFilter;
 import esgback.esg.Security.TryUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
@@ -22,8 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -77,6 +76,11 @@ public class CustomSecurityConfig{
 
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.addFilterBefore(
+                tokenCheckFilter(jwtUtil),
+                UsernamePasswordAuthenticationFilter.class
+        );
+
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
         http.formLogin().disable();//기본적인 formLogin 화면을 출력 안한다
@@ -98,4 +102,8 @@ public class CustomSecurityConfig{
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }//cors 해결 위함
+
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
+        return new TokenCheckFilter(jwtUtil);
+    }
 }
