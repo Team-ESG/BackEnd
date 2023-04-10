@@ -3,7 +3,6 @@ package esgback.esg.Security.Filter;
 import esgback.esg.Exception.AccessTokenException;
 import esgback.esg.Util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class TokenCheckFilter extends OncePerRequestFilter {
+public class AccessTokenCheckFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 

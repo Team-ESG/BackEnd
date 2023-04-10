@@ -1,7 +1,7 @@
 package esgback.esg.Config;
 
 import esgback.esg.Security.Filter.LoginFilter;
-import esgback.esg.Security.Filter.TokenCheckFilter;
+import esgback.esg.Security.Filter.AccessTokenCheckFilter;
 import esgback.esg.Security.TryUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
@@ -103,7 +103,7 @@ public class CustomSecurityConfig{
         return source;
     }//cors 해결 위함
 
-    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
-        return new TokenCheckFilter(jwtUtil);
+    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
+        return new AccessTokenCheckFilter(jwtUtil);
     }
 }
