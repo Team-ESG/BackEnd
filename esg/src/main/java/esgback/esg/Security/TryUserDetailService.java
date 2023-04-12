@@ -27,11 +27,12 @@ public class TryUserDetailService implements UserDetailsService {
 
         Member member = find.orElseThrow(() -> new UsernameNotFoundException("해당 아이디는 존재하지 않습니다."));
 
+
         MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(
                 member.getMemberId(),
                 member.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-        );
+                List.of(new SimpleGrantedAuthority(member.getRole().name())
+                ));
 
         return memberLoadUserDto;
     }
