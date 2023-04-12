@@ -2,6 +2,7 @@ package esgback.esg.Security.Filter;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +25,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         if (request.getMethod().equalsIgnoreCase("GET")) {
-            System.out.println("GET Method not support");
+            throw new UnavailableException("get method는 지원하지 않습니다");
         }
 
         Map<String, String> jsonData = parseRequestJson(request);
