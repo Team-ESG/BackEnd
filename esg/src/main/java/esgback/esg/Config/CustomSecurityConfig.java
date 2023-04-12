@@ -60,7 +60,7 @@ public class CustomSecurityConfig{
 
         http.authenticationManager(authenticationManager);
 
-        LoginFilter loginFilter = new LoginFilter("/generateToken");
+        LoginFilter loginFilter = new LoginFilter("/login");
         loginFilter.setAuthenticationManager(authenticationManager);
         /**
          * loginFilter는 Spring Security에서 인증 처리를 위한 기본적인 로직이 구현된 필터이다.
@@ -80,11 +80,11 @@ public class CustomSecurityConfig{
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(
-                tokenCheckFilter(jwtUtil),
+                tokenCheckFilter(jwtUtil, tryUserDetailService),//accessTokenCheckFilter
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), AccessTokenCheckFilter.class);
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), AccessTokenCheckFilter.class);//refreshTokenCheckFilter
 
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
@@ -108,7 +108,7 @@ public class CustomSecurityConfig{
         return source;
     }//cors 해결 위함
 
-    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil) {
-        return new AccessTokenCheckFilter(jwtUtil);
+    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, TryUserDetailService tryUserDetailService) {
+        return new AccessTokenCheckFilter(jwtUtil, tryUserDetailService);
     }
 }
