@@ -1,12 +1,10 @@
 package esgback.esg.Security.handler;
 
 import com.google.gson.Gson;
-import esgback.esg.DTO.Response;
 import esgback.esg.Util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -22,8 +20,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
-        System.out.println("login success handler");
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 

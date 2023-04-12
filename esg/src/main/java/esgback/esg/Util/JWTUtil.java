@@ -19,10 +19,6 @@ public class JWTUtil {
 
     public String generateToken(Map<String, Object> valueMap, int days) {
 
-        System.out.println("generateKey..." + key);
-
-        System.out.println(valueMap);
-
         //header 부분
         Map<String, Object> headers = new HashMap<>();
         headers.put("type", "JWT");
