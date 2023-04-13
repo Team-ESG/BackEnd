@@ -12,6 +12,7 @@ import esgback.esg.Service.Member.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -55,7 +56,7 @@ public class MemberJoinController {
         return response.success("회원가입이 완료되었습니다.");
     }//회원가입
 
-    @GetMapping("/register/send")
+    @PostMapping("/register/send")
     public ResponseEntity<?> sendPhoneMSG(@RequestBody Map<String, String> phone) {
         try {
             CodeResponseDto codeResponseDto = messageService.sendOneMsg(phone.get("phone"));//6자리 인증번호
@@ -67,7 +68,7 @@ public class MemberJoinController {
 
     }//인증번호 발송
 
-    @GetMapping("/check/code")
+    @PostMapping("/check/code")
     public ResponseEntity<?> compareCode(@RequestBody CodeRequestDto codeRequestDto) {
         try {
             String result = memberInfoService.testCode(codeRequestDto);
@@ -76,4 +77,16 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//인증번호 검증
+
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
+    @GetMapping("/auth/hello")
+    public String hello() {
+        return "Hello";
+    }
+    /**
+     * 권한에 따라 접근 가능 여부 테스트 용도입니다.
+     * 1. ROLE_USER
+     * 2. ROLE_ADMIN
+     * 권한 변경을 하시려면 hasRole 내의 인자를 변경하면 됩니다.
+     */
 }
