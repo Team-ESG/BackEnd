@@ -53,7 +53,7 @@ public class Member {
                 .password(encodePassword)
                 .name(memberJoinDto.getName())
                 .nickName(memberJoinDto.getNickname())
-                .role(Role.ROLE_MEMBER)
+                .role(Role.ROLE_USER)
                 .address(memberJoinDto.getAddress())
                 .sex(memberJoinDto.getSex())
                 .birthDate(memberJoinDto.getBirthDate())

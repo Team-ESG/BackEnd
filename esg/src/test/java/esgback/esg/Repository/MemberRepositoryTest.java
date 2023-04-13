@@ -31,7 +31,7 @@ class MemberRepositoryTest {
                 .password("isTest")
                 .name("isTester")
                 .nickName("isTester")
-                .role(Role.ROLE_MEMBER)
+                .role(Role.ROLE_USER)
                 .address(address)
                 .sex(Sex.MAN)
                 .birthDate(LocalDate.parse("1999-01-23"))

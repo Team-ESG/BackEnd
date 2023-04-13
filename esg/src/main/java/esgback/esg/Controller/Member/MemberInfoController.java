@@ -48,7 +48,7 @@ public class MemberInfoController {
         try {
             memberInfoService.resetPwd(resetDto);
             return response.success("비밀번호 재설정 완료");
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             return response.fail("해당하는 계정이 없습니다.", HttpStatus.NOT_FOUND);
         }
     }//회원 비밀번호 재설정
@@ -59,7 +59,7 @@ public class MemberInfoController {
         try {
             memberInfoService.resetNickname(resetDto);
             return response.success("닉네임 재설정 완료");
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             return response.fail("해당하는 계정이 없습니다.", HttpStatus.NOT_FOUND);
         }
     }//회원 닉네임 재설정
