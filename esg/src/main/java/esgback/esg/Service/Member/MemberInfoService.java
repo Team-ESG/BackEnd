@@ -71,6 +71,7 @@ public class MemberInfoService {
         Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
         String encodePassword = passwordEncoder.encode(resetDto.getPwd());
 
         Member newMember = Member.updatePwd(oldMember, encodePassword);
@@ -80,8 +81,14 @@ public class MemberInfoService {
 
     public void resetNickname(ResetDto resetDto) {
         Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+        boolean isNickname = memberRepository.existsByNickName(resetDto.getNickname());
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        if (isNickname) {
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
+        }
+
         Member newMember = Member.updateNick(oldMember, resetDto.getNickname());
 
         memberRepository.save(newMember);
