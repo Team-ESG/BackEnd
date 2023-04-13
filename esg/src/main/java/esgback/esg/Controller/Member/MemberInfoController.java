@@ -60,7 +60,7 @@ public class MemberInfoController {
             memberInfoService.resetNickname(resetDto);
             return response.success("닉네임 재설정 완료");
         } catch (IllegalArgumentException e) {
-            return response.fail("해당하는 계정이 없습니다.", HttpStatus.NOT_FOUND);
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//회원 닉네임 재설정
 }
