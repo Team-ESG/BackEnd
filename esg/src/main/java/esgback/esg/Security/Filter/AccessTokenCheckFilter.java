@@ -1,7 +1,7 @@
 package esgback.esg.Security.Filter;
 
 import esgback.esg.Exception.AccessTokenException;
-import esgback.esg.Security.TryUserDetailService;
+import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class AccessTokenCheckFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-    private final TryUserDetailService tryUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,7 +40,7 @@ public class AccessTokenCheckFilter extends OncePerRequestFilter {
 
             String id = (String) value.get("id");
 
-            UserDetails userDetails = tryUserDetailService.loadUserByUsername(id);
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(id);
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 

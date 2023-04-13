@@ -3,7 +3,7 @@ package esgback.esg.Config;
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.Filter.AccessTokenCheckFilter;
 import esgback.esg.Security.Filter.RefreshTokenFilter;
-import esgback.esg.Security.TryUserDetailService;
+import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,7 +31,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class CustomSecurityConfig{
 
-    private final TryUserDetailService tryUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -53,7 +51,7 @@ public class CustomSecurityConfig{
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);//AuthenticationManager 설정
 
         authenticationManagerBuilder
-                .userDetailsService(tryUserDetailService)
+                .userDetailsService(customUserDetailService)
                 .passwordEncoder(passwordEncoder());
 
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
@@ -80,7 +78,7 @@ public class CustomSecurityConfig{
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(
-                tokenCheckFilter(jwtUtil, tryUserDetailService),//accessTokenCheckFilter
+                tokenCheckFilter(jwtUtil, customUserDetailService),//accessTokenCheckFilter
                 UsernamePasswordAuthenticationFilter.class
         );
 
@@ -90,6 +88,7 @@ public class CustomSecurityConfig{
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
         http.formLogin().disable();//기본적인 formLogin 화면을 출력 안한다
         http.cors();
+        http.oauth2Login().loginPage("/login");
 
         return http.build();
     }
@@ -108,7 +107,7 @@ public class CustomSecurityConfig{
         return source;
     }//cors 해결 위함
 
-    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, TryUserDetailService tryUserDetailService) {
-        return new AccessTokenCheckFilter(jwtUtil, tryUserDetailService);
+    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailService customUserDetailService) {
+        return new AccessTokenCheckFilter(jwtUtil, customUserDetailService);
     }
 }
