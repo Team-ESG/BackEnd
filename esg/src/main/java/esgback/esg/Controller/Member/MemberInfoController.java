@@ -19,7 +19,7 @@ public class MemberInfoController {
     private final MemberInfoService memberInfoService;
     private final Response response;
 
-    @GetMapping("/info/id")
+    @PostMapping("/info/id")
     public ResponseEntity<?> getMemberId(@RequestBody Map<String, String> phone) {
 
         try {
@@ -31,7 +31,7 @@ public class MemberInfoController {
         }
     }//회원 아이디 찾기
 
-    @GetMapping("/info/check/pwd")
+    @PostMapping("/info/check/pwd")
     public ResponseEntity<?> checkResetPwdAvailable(@RequestBody PwdCodeRequestDto pwdCodeRequestDto) {
 
         try {

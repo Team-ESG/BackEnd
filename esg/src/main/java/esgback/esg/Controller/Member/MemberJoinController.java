@@ -56,7 +56,7 @@ public class MemberJoinController {
         return response.success("회원가입이 완료되었습니다.");
     }//회원가입
 
-    @GetMapping("/register/send")
+    @PostMapping("/register/send")
     public ResponseEntity<?> sendPhoneMSG(@RequestBody Map<String, String> phone) {
         try {
             CodeResponseDto codeResponseDto = messageService.sendOneMsg(phone.get("phone"));//6자리 인증번호
@@ -68,7 +68,7 @@ public class MemberJoinController {
 
     }//인증번호 발송
 
-    @GetMapping("/check/code")
+    @PostMapping("/check/code")
     public ResponseEntity<?> compareCode(@RequestBody CodeRequestDto codeRequestDto) {
         try {
             String result = memberInfoService.testCode(codeRequestDto);
