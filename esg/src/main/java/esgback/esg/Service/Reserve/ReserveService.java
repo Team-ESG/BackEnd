@@ -1,4 +1,4 @@
-package esgback.esg.Service;
+package esgback.esg.Service.Reserve;
 
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.Domain.Enum.State;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -46,5 +47,13 @@ public class ReserveService {
         itemService.reserve(item, wantReserveDto.getQuantity());
 
         return updateReserve;
+    }
+
+    public List<Reserve> findByMemberId(Long memberId) {
+        List<Reserve> reserveList = reserveRepository.findByMemberId(memberId);
+
+        if (reserveList.isEmpty()) throw new IllegalArgumentException("예약 내역이 없습니다.");
+        
+        return reserveList;
     }
 }

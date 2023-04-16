@@ -1,21 +1,20 @@
 package esgback.esg.Controller.Reserve;
 
+import esgback.esg.DTO.Reserve.SimpleReserveDto;
 import esgback.esg.DTO.Reserve.SuccessReserveDto;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Domain.Reserve.Reserve;
-import esgback.esg.Service.ReserveService;
+import esgback.esg.Service.Reserve.ReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +39,22 @@ public class ReserveController {
                     .build();
 
             return response.success(successReserveDto);
+        } catch (IllegalArgumentException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/main/reserveList")
+    public ResponseEntity<?> getAllReserve(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+        try {
+            List<Reserve> reserveList = reserveService.findByMemberId(memberId);
+
+            List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
+                    .map(reserve -> new SimpleReserveDto(reserve.getItem().getName(), reserve.getReserveDate(), reserve.getIsSuccess(), reserve.getPrice(), reserve.getQuantity()))
+                    .collect(Collectors.toList());
+
+            return response.success(simpleReserveDtoList);
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }

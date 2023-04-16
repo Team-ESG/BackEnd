@@ -5,7 +5,6 @@ import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.ItemRepository;
 import esgback.esg.Repository.MemberRepository;
-import esgback.esg.Service.ReserveService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
