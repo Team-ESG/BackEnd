@@ -1,11 +1,13 @@
 package esgback.esg.Controller.Reserve;
 
+import esgback.esg.DTO.Reserve.ReserveDetailDto;
 import esgback.esg.DTO.Reserve.SimpleReserveDto;
 import esgback.esg.DTO.Reserve.SuccessReserveDto;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Domain.Reserve.Reserve;
 import esgback.esg.Service.Reserve.ReserveService;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +58,19 @@ public class ReserveController {
 
             return response.success(simpleReserveDtoList);
         } catch (IllegalArgumentException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/main/reserveList/{reserve_id}")
+    public ResponseEntity<?> getReserveDetail(@PathVariable("reserve_id") Long reserveId) {
+        try {
+            Reserve reserve = reserveService.findById(reserveId);
+
+            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getMember(), reserve.getItem(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getIsSuccess(), reserve.getQuantity(), reserve.getPrice());
+
+            return response.success(reserveDetailDto);
+        } catch (NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

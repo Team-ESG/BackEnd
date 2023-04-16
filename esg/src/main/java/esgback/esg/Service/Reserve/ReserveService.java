@@ -9,6 +9,7 @@ import esgback.esg.Repository.ItemRepository;
 import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Repository.ReserveRepository;
 import esgback.esg.Service.Item.ItemService;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,13 @@ public class ReserveService {
         List<Reserve> reserveList = reserveRepository.findByMemberId(memberId);
 
         if (reserveList.isEmpty()) throw new IllegalArgumentException("예약 내역이 없습니다.");
-        
+
         return reserveList;
+    }
+
+    public Reserve findById(Long reserveId) {
+        Reserve reserve = reserveRepository.findById(reserveId).orElseThrow(() -> new NoResultException("해당 예약내역은 존재하지 않습니다."));
+
+        return reserve;
     }
 }
