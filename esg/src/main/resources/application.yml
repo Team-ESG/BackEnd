@@ -9,6 +9,25 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-name: kakao
+            scope: profile_nickname, account_email, birthday, gender
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-id: "${KAKAO_REST_KEY}"
+            client-secret: "${KAKAO_CLIENT_SECRET_KEY}"
+            client-authentication-method: POST
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            user-name-attribute: id
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
 
 
   jpa:
