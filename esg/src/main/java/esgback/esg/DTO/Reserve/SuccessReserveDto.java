@@ -1,20 +1,21 @@
 package esgback.esg.DTO.Reserve;
 
-import esgback.esg.Domain.Item.Item;
-import esgback.esg.Domain.Member.Member;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * A DTO for the {@link esgback.esg.Domain.Reserve.Reserve} entity
  */
 @Data
-public class WantReserveDto implements Serializable {
-    private final Member member;
-    private final Item item;
+@Builder
+@AllArgsConstructor
+public class SuccessReserveDto implements Serializable {
     private final LocalDateTime reserveDate;
+    private final LocalDateTime reserveEndDate;
     private final int quantity;
+    private final int price;
 }
