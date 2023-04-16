@@ -28,6 +28,7 @@ public class Reserve {
     private Item item;
 
     private Date reserveDate;
+    private Date reserveEndDate;
     private State isSuccess;
 
     private int quantity;
