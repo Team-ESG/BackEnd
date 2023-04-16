@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class SimpleReserveDto implements Serializable {
+    private final Long reserveId;
     private final String itemName;
     private final LocalDateTime reserveDate;
     private final State isSuccess;
