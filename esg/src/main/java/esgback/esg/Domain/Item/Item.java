@@ -30,5 +30,6 @@ public class Item {
     private int discountPrice;
     private Date registerDate;
     private int itemQuantity;
+    private int reservedQuantity;
     private int wishedItemAddedCount;
 }
