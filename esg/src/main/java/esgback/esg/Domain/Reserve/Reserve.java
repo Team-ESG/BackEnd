@@ -29,4 +29,7 @@ public class Reserve {
 
     private Date reserveDate;
     private State isSuccess;
+
+    private int quantity;
+    private int price;
 }
