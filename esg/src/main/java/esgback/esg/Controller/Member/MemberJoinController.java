@@ -3,6 +3,7 @@ package esgback.esg.Controller.Member;
 import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.DTO.Code.CodeResponseDto;
 import esgback.esg.DTO.Member.MemberJoinDto;
+import esgback.esg.DTO.Member.SocialMemberSetDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Member.MemberInfoService;
 import esgback.esg.DTO.Member.MemberJoinDto;
@@ -77,6 +78,17 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//인증번호 검증
+
+    @PatchMapping("register/social")
+    public ResponseEntity<?> joinSocialMember(@RequestBody SocialMemberSetDto socialMemberSetDto) {
+
+        try {
+            memberJoinService.joinSocialMemberInfo(socialMemberSetDto);
+            return response.success("정보 설정 완료");
+        } catch (IllegalArgumentException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/auth/hello")

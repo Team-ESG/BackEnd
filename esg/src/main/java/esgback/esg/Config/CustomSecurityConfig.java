@@ -5,6 +5,7 @@ import esgback.esg.Security.Filter.AccessTokenCheckFilter;
 import esgback.esg.Security.Filter.RefreshTokenFilter;
 import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
+import esgback.esg.Security.handler.SocialLoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -73,6 +74,8 @@ public class CustomSecurityConfig{
 
         LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil);
 
+        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil);
+
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
@@ -88,7 +91,9 @@ public class CustomSecurityConfig{
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
         http.formLogin().disable();//기본적인 formLogin 화면을 출력 안한다
         http.cors();
-        http.oauth2Login().loginPage("/login");
+        http.oauth2Login()
+                .loginPage("/login")
+                .successHandler(socialLoginSuccessHandler);
 
         return http.build();
     }
