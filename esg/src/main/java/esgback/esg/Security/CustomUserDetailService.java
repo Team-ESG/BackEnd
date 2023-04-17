@@ -31,7 +31,6 @@ public class CustomUserDetailService implements UserDetailsService {
                 member.getMemberId(),
                 member.getPassword(),
                 true,
-                false,
                 List.of(new SimpleGrantedAuthority(member.getRole().name())
                 ));
 
