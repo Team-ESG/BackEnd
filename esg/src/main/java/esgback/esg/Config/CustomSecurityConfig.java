@@ -74,7 +74,7 @@ public class CustomSecurityConfig{
 
         LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil);
 
-        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler();
+        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil);
 
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 

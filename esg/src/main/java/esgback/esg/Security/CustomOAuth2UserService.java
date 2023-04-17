@@ -7,6 +7,7 @@ import esgback.esg.Domain.Member.Role;
 import esgback.esg.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,6 +22,7 @@ import java.util.*;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -68,10 +70,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             Sex sex = ((orderedData.get("gender").equals("male")) ? Sex.MAN : Sex.WOMAN);
             String name = profile.get("nickname");
+            String encodePassword = passwordEncoder.encode("1111");//처음 소셜 로그인 이용하는 사람의 비번은 1111
 
             Member member = Member.builder()
                     .memberId(email)
-                    .password("1111")
+                    .password(encodePassword)
                     .name(name)
                     .role(Role.ROLE_USER)
                     .sex(sex)
@@ -80,7 +83,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             memberRepository.save(member);
 
-            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(email, "1111", false, true, Arrays.asList(new SimpleGrantedAuthority(Role.ROLE_USER.name())));
+            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(email, encodePassword, member.getSocial(), Arrays.asList(new SimpleGrantedAuthority(Role.ROLE_USER.name())));
             memberLoadUserDto.setProps(attributes);
 
             return memberLoadUserDto;
@@ -88,7 +91,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else{
             Member member = memberRepository.findByMemberId(email).get();
 
-            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(member.getMemberId(), member.getPassword(), true, member.getSocial(), Arrays.asList(new SimpleGrantedAuthority(member.getRole().name())));
+            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(member.getMemberId(), member.getPassword(), member.getSocial(), Arrays.asList(new SimpleGrantedAuthority(member.getRole().name())));
 
             return memberLoadUserDto;
         }
