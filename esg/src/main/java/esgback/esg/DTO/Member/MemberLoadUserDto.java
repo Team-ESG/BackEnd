@@ -17,14 +17,12 @@ public class MemberLoadUserDto extends User implements OAuth2User {
     private String id;
     private String pwd;
     private Map<String, Object> props;//소셜 로그인 정보
-    private Boolean isExist;
     private Boolean social;
 
-    public MemberLoadUserDto(String username, String pwd, Boolean isExist, Boolean social, Collection<GrantedAuthority> authorities) {
+    public MemberLoadUserDto(String username, String pwd, Boolean social, Collection<GrantedAuthority> authorities) {
         super(username, pwd, authorities);
         this.id = username;
         this.pwd = pwd;
-        this.isExist = isExist;
         this.social = social;//social 로그인이면서 회원 db에 없으면 계정 새로 파야됨
     }
 
