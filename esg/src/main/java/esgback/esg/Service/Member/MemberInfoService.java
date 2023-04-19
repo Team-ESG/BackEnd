@@ -4,8 +4,10 @@ import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
+import esgback.esg.Domain.Member.Address;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,6 +25,7 @@ public class MemberInfoService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -90,6 +94,21 @@ public class MemberInfoService {
         }
 
         Member newMember = Member.updateNick(oldMember, resetDto.getNickname());
+
+        memberRepository.save(newMember);
+    }
+
+    public void resetAddress(Address address, String authorization) {
+        String token = authorization.substring(7);
+
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
+
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        Member newMember = Member.updateAddress(oldMember, address);
 
         memberRepository.save(newMember);
     }

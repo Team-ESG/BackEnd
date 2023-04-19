@@ -1,16 +1,12 @@
 package esgback.esg.Service.Member;
 
 import esgback.esg.DTO.Member.MemberJoinDto;
-import esgback.esg.DTO.Member.SocialMemberSetDto;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -38,28 +34,5 @@ public class MemberJoinService {
         Member member = Member.createMember(memberJoinDto, encodePassword);
 
         memberRepository.save(member);
-    }
-
-    public void joinSocialMemberInfo(SocialMemberSetDto socialMemberSetDto) {
-        Optional<Member> find = memberRepository.findByMemberId(socialMemberSetDto.getMemberId());
-
-        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
-
-        Member newMember = Member.builder()
-                .id(member.getId())
-                .memberId(member.getMemberId())
-                .password(passwordEncoder.encode(socialMemberSetDto.getPassword()))
-                .name(member.getName())
-                .nickName(socialMemberSetDto.getNickname())
-                .role(member.getRole())
-                .address(socialMemberSetDto.getAddress())
-                .sex(member.getSex())
-                .birthDate(socialMemberSetDto.getBirthDate())
-                .discountPrice(member.getDiscountPrice())
-                .phoneNumber(socialMemberSetDto.getPhoneNumber())
-                .social(member.getSocial())
-                .build();
-
-        memberRepository.save(newMember);
     }
 }

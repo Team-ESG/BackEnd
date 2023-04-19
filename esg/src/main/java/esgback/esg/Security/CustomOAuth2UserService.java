@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -23,6 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final String[] specialChar = new String[]{"!", "@", "#", "$", "%", "^", "&", "&", "(", ")"};
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -65,19 +67,33 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         boolean isMember = memberRepository.existsByMemberId(email);
 
+        System.out.println("attribute : " + attributes );
+        System.out.println("ordered: " + orderedData);
+
         if (!isMember) {
             LinkedHashMap<String, String> profile = (LinkedHashMap<String, String>)orderedData.get("profile");
 
             Sex sex = ((orderedData.get("gender").equals("male")) ? Sex.MAN : Sex.WOMAN);
             String name = profile.get("nickname");
-            String encodePassword = passwordEncoder.encode("1111");//처음 소셜 로그인 이용하는 사람의 비번은 1111
+            String encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
+
+            String randNum = Integer.toString((int) (Math.random() * 10000));
+            String nickName = name + randNum;
+
+            String birthday = (String) orderedData.get("birthday");
+            int month = Integer.parseInt(birthday.substring(0, 2));
+            int day = Integer.parseInt(birthday.substring(2));
+            int year = 1900;
+            LocalDate birthdate = LocalDate.of(year, month, day);
 
             Member member = Member.builder()
                     .memberId(email)
                     .password(encodePassword)
                     .name(name)
+                    .nickName(nickName)
                     .role(Role.ROLE_USER)
                     .sex(sex)
+                    .birthDate(birthdate)
                     .social(true)
                     .build();
 
@@ -95,7 +111,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             return memberLoadUserDto;
         }
+    }
 
+    private String generatePassword() {
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
 
+        for (int i = 0; i < 7; i++) {
+            password.append(random.nextInt(10));
+        }
+
+        for (int i = 0; i < 2; i++) {
+            password.append(specialChar[random.nextInt(10)]);
+        }
+
+        return String.valueOf(password);
     }
 }
