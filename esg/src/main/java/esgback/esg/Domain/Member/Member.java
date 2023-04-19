@@ -101,4 +101,22 @@ public class Member {
 
         return newMember;
     }
+
+    public static Member updateAddress(Member member, Address address) {
+        Member newMember = Member.builder()
+                .id(member.getId())
+                .memberId(member.getMemberId())
+                .password(member.getPassword())
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .role(member.getRole())
+                .address(address)
+                .sex(member.getSex())
+                .birthDate(member.getBirthDate())
+                .discountPrice(member.getDiscountPrice())
+                .phoneNumber(member.getPhoneNumber())
+                .build();
+
+        return newMember;
+    }
 }
