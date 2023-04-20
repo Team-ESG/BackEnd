@@ -1,5 +1,6 @@
 package esgback.esg.Config;
 
+import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.Filter.TokenCheckFilter;
 import esgback.esg.Security.Filter.RefreshTokenFilter;
@@ -8,7 +9,6 @@ import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Security.handler.SocialLoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +36,8 @@ public class CustomSecurityConfig{
 
     private final CustomUserDetailService customUserDetailService;
     private final JWTUtil jwtUtil;
-
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -118,6 +117,6 @@ public class CustomSecurityConfig{
     }//cors 해결 위함
 
     private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailService customUserDetailService) {
-        return new TokenCheckFilter(jwtUtil, customUserDetailService);
+        return new TokenCheckFilter(jwtUtil, customUserDetailService, memberRepository, redisTemplate);
     }
 }
