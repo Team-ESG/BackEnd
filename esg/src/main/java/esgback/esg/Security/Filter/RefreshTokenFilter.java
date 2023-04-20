@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
     private final String refreshPath;
     private final JWTUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
     @Override
@@ -63,18 +65,13 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             long diffTime = expTime.getTime() - now.getTime();
 
             String id = (String) refreshClaims.get("id");
-
             String newAccessToken = jwtUtil.generateToken(Map.of("id", id), 1);
-
             String newRefreshToken = tokens.get("refreshToken");
 
             if (diffTime < (1000 * 60 * 60 * 24 * 3)) {
-                System.out.println(diffTime);
                 newRefreshToken = jwtUtil.generateToken(Map.of("id", id), 30);
+                redisTemplate.opsForValue().set("RT_" + id, newRefreshToken, 120);
             }
-
-            System.out.println("new refrshToken: " + newRefreshToken);
-            System.out.println("new accessToken: " + newAccessToken);
 
             sendTokens(newAccessToken, newRefreshToken, response);
         } catch (RefreshTokenException refreshTokenException) {
