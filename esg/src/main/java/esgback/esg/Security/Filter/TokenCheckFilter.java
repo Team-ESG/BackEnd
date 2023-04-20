@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class AccessTokenCheckFilter extends OncePerRequestFilter {
+public class TokenCheckFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final CustomUserDetailService customUserDetailService;
