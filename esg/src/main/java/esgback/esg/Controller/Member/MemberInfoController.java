@@ -65,7 +65,7 @@ public class MemberInfoController {
         }
     }//회원 닉네임 재설정
 
-    @PatchMapping("info/reset/address")
+    @PatchMapping("auth/info/reset/address")
     public ResponseEntity<?> resetAddress(@RequestBody Address address, @RequestHeader("authorization") String authorization) {
         try{
             memberInfoService.resetAddress(address, authorization);
