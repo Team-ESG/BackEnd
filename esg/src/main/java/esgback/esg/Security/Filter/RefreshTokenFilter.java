@@ -36,6 +36,7 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         String requestURI = request.getRequestURI();
 
+
         if (!requestURI.equals(refreshPath)) {
             filterChain.doFilter(request, response);
             return;
@@ -56,6 +57,8 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         try {
             refreshClaims = checkRefreshToken(refreshToken);
+            String id = (String) refreshClaims.get("id");
+            isRedis(refreshToken, id);
 
             Integer exp = (Integer) refreshClaims.get("exp");
 
@@ -64,7 +67,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
             long diffTime = expTime.getTime() - now.getTime();
 
-            String id = (String) refreshClaims.get("id");
             String newAccessToken = jwtUtil.generateToken(Map.of("id", id), 1);
             String newRefreshToken = tokens.get("refreshToken");
 
@@ -110,6 +112,16 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             throw new RefreshTokenException(RefreshTokenException.ErrorCase.OLD_REFRESH);
         } catch (MalformedJwtException malformedJwtException) {
             throw new RefreshTokenException(RefreshTokenException.ErrorCase.NO_REFRESH);
+        }
+    }
+
+    private void isRedis(String refreshToken, String id) {
+        String redisKey = "RT_" + id;
+        String redisToken = redisTemplate.opsForValue().get(redisKey);
+
+        boolean isSame = refreshToken.replace("\u0000", "").equals(redisToken.replace("\u0000", ""));
+        if (!isSame) {
+            throw new RefreshTokenException(RefreshTokenException.ErrorCase.NO_AUTHORIZE);
         }
     }
 
