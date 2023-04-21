@@ -17,6 +17,7 @@ public class AccessTokenException extends RuntimeException {
     public enum TOKEN_ERROR {
         UNACCEPT(401, "Token is null or too short"),
         BADTYPE(401, "Token needs to be bearer"),
+        LOGOUT(401, "Token is Logouted"),
         MALFORM(403, "Token is malformed"),
         BADSIGN(403, "Token with unauthorized sign"),
         EXPIRED(403, "Token is expired");
