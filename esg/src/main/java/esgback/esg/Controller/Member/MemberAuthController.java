@@ -2,17 +2,12 @@ package esgback.esg.Controller.Member;
 
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Member.MemberAuthService;
-import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,16 +16,14 @@ public class MemberAuthController {
     private final MemberAuthService memberAuthService;
     private final Response response;
 
-    @PreAuthorize(value = "hasRole('ROLE_USER')")
-    @PostMapping("/auth/autoLogin")
-    public void autoLoginTest() {
-    }
-
-    @PostMapping("/auth/logout")
+    @PostMapping("/outlog")
     public ResponseEntity<?> logout(@RequestHeader("authorization") String authorization) {
+        try {
+            memberAuthService.Logout(authorization);
 
-        memberAuthService.Logout(authorization);
-
-        return response.success("success logout");
-    }
+            return response.success("success logout");
+        } catch (Exception e) {
+            return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }//accessToken 유효하지 않으면 에러메시지 보내고 클라이언트에서 토큰 삭제하는 형식으로 가야하나....
 }
