@@ -3,7 +3,7 @@ package esgback.esg.Config;
 import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.Filter.TokenCheckFilter;
-import esgback.esg.Security.Filter.RefreshTokenFilter;
+import esgback.esg.Security.Filter.AutoLoginCheckFilter;
 import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Security.handler.SocialLoginSuccessHandler;
@@ -89,7 +89,7 @@ public class CustomSecurityConfig{
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil, redisTemplate), TokenCheckFilter.class);//refreshTokenCheckFilter
+        http.addFilterBefore(new AutoLoginCheckFilter("/autoLogin", jwtUtil, redisTemplate, memberRepository), TokenCheckFilter.class);//refreshTokenCheckFilter
 
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
