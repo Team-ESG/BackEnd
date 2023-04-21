@@ -55,27 +55,6 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-            if(requestURI.equals("/auth/autoLogin")){
-                Optional<Member> find = memberRepository.findByMemberId(id);
-                Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
-
-                MemberReturnDto memberReturnDto = MemberReturnDto.builder()
-                        .memberId(member.getMemberId())
-                        .name(member.getName())
-                        .nickName(member.getNickName())
-                        .address(member.getAddress())
-                        .sex(member.getSex())
-                        .discountPrice(member.getDiscountPrice())
-                        .build();
-
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-                Gson gson = new Gson();
-                String data = gson.toJson(Map.of("data", memberReturnDto));
-
-                response.getWriter().println(data);
-            }
-
             filterChain.doFilter(request, response);
         } catch (AccessTokenException accessTokenException) {
             accessTokenException.sendResponseError(response);
