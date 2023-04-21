@@ -1,7 +1,10 @@
 package esgback.esg.Security.Filter;
 
 import com.google.gson.Gson;
+import esgback.esg.DTO.Member.MemberReturnDto;
+import esgback.esg.Domain.Member.Member;
 import esgback.esg.Exception.RefreshTokenException;
+import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -12,8 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -22,13 +23,16 @@ import java.io.Reader;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
-public class RefreshTokenFilter extends OncePerRequestFilter {
+public class AutoLoginCheckFilter extends OncePerRequestFilter {
 
     private final String refreshPath;
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
+    private final MemberRepository memberRepository;
 
 
     @Override
@@ -62,20 +66,22 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
             Integer exp = (Integer) refreshClaims.get("exp");
 
-            Date expTime = new Date(Instant.ofEpochMilli(exp).toEpochMilli() * 1000);
+            Date expTime = new Date(Instant.ofEpochMilli(exp).toEpochMilli() * 1000); // Fri Apr 21 16:53:48 KST 2023 이런식으로 나온다
             Date now = new Date(System.currentTimeMillis());
 
             long diffTime = expTime.getTime() - now.getTime();
+            long diffSec = diffTime / 1000; //초 단위 시간 차
+            long diffMin = diffSec / 60; //분 단위 시간 차
 
             String newAccessToken = jwtUtil.generateToken(Map.of("id", id), 1);
             String newRefreshToken = tokens.get("refreshToken");
 
-            if (diffTime < (1000 * 60 * 60 * 24 * 3)) {
-                newRefreshToken = jwtUtil.generateToken(Map.of("id", id), 30);
-                redisTemplate.opsForValue().set("RT_" + id, newRefreshToken, 120);
+            if (diffTime < 1) {//1분 미만으로 refreshToken 유효시간 남으면 재발급
+                newRefreshToken = jwtUtil.generateToken(Map.of("id", id), 3);
+                redisTemplate.opsForValue().set("RT_" + id, newRefreshToken, 180, TimeUnit.SECONDS);
             }
 
-            sendTokens(newAccessToken, newRefreshToken, response);
+            sendTokens(id, newAccessToken, newRefreshToken, response);
         } catch (RefreshTokenException refreshTokenException) {
             refreshTokenException.sendResponseError(response);
         }
@@ -125,13 +131,25 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
         }
     }
 
-    private void sendTokens(String accessToken, String refreshToken, HttpServletResponse response) {
+    private void sendTokens(String id, String accessToken, String refreshToken, HttpServletResponse response) {
+
+        Optional<Member> find = memberRepository.findByMemberId(id);
+        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        MemberReturnDto memberReturnDto = MemberReturnDto.builder()
+                .memberId(member.getMemberId())
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .address(member.getAddress())
+                .sex(member.getSex())
+                .discountPrice(member.getDiscountPrice())
+                .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Gson gson = new Gson();
 
-        String sendData = gson.toJson(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
+        String sendData = gson.toJson(Map.of("data", memberReturnDto, "accessToken", accessToken, "refreshToken", refreshToken));
 
         try {
             response.getWriter().println(sendData);
