@@ -27,6 +27,6 @@ public class MemberAuthService {
         }
 
         long exp = Long.parseLong(String.valueOf(tokenValue.get("exp")));
-        redisTemplate.opsForValue().set(token, "logout", exp, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(token, "logout", exp, TimeUnit.SECONDS);
     }
 }
