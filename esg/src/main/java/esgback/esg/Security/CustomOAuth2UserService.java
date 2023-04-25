@@ -42,9 +42,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             case "kakao":
                 email = getKaKaoEmail(attributes);
                 break;
+
+            case "Naver":
+                email = getNaverEmail(attributes);
+                break;
+
         }
 
-        MemberLoadUserDto memberLoadUserDto = generateDto(email, attributes);
+        MemberLoadUserDto memberLoadUserDto = generateDto(clientName, email, attributes);
 
 
         return memberLoadUserDto;
@@ -60,31 +65,71 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return email;
     }
 
-    private MemberLoadUserDto generateDto(String email, Map<String, Object> attributes) {
-        Object kakao_account = attributes.get("kakao_account");
+    private String getNaverEmail(Map<String, Object> attributes) {
+        Object naver_account = attributes.get("response");
 
-        LinkedHashMap orderedData = (LinkedHashMap) kakao_account;
+        LinkedHashMap orderedData = (LinkedHashMap) naver_account;
 
+        String email = (String) orderedData.get("email");
+
+        return email;
+    }
+
+    private MemberLoadUserDto generateDto(String clientName, String email, Map<String, Object> attributes) {
         boolean isMember = memberRepository.existsByMemberId(email);
 
-        System.out.println("attribute : " + attributes );
-        System.out.println("ordered: " + orderedData);
+        String name = null;
+        String nickName = null;
+        String encodePassword = null;
+        String birthday;
+        LocalDate birthdate = null;
+        Sex sex = null;
 
         if (!isMember) {
-            LinkedHashMap<String, String> profile = (LinkedHashMap<String, String>)orderedData.get("profile");
+            if(clientName.equals("kakao")){
+                Object kakao_account = attributes.get("kakao_account");
+                LinkedHashMap orderedData = (LinkedHashMap) kakao_account;
 
-            Sex sex = ((orderedData.get("gender").equals("male")) ? Sex.MAN : Sex.WOMAN);
-            String name = profile.get("nickname");
-            String encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
+                LinkedHashMap<String, String> profile = (LinkedHashMap<String, String>)orderedData.get("profile");
 
-            String randNum = Integer.toString((int) (Math.random() * 10000));
-            String nickName = name + randNum;
+                sex = ((orderedData.get("gender").equals("male")) ? Sex.MAN : Sex.WOMAN);
+                name = profile.get("nickname");
 
-            String birthday = (String) orderedData.get("birthday");
-            int month = Integer.parseInt(birthday.substring(0, 2));
-            int day = Integer.parseInt(birthday.substring(2));
-            int year = 1900;
-            LocalDate birthdate = LocalDate.of(year, month, day);
+                encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
+
+                String randNum = Integer.toString((int) (Math.random() * 10000));
+
+                nickName = name + randNum;
+
+                birthday = (String) orderedData.get("birthday");
+                int month = Integer.parseInt(birthday.substring(0, 2));
+                int day = Integer.parseInt(birthday.substring(2));
+                int year = 1900;
+                birthdate = LocalDate.of(year, month, day);
+            }
+            else if (clientName.equals("Naver")) {
+                Object naver_account = attributes.get("response");
+                LinkedHashMap<String, String> orderedData = (LinkedHashMap<String, String>) naver_account;
+
+                sex = ((orderedData.get("gender")).equals("M")) ? Sex.MAN : Sex.WOMAN;
+                name = orderedData.get("name");
+
+                encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
+
+                boolean isNickName = memberRepository.existsByNickName(orderedData.get("nickname"));
+                if (isNickName) {//nickname 있을 때,
+                    String randNum = Integer.toString((int) (Math.random() * 10000));
+                    nickName = orderedData.get("nickname") + randNum;
+                }
+                else{//nickname 없을 때,
+                    nickName = orderedData.get("nickname");
+                }
+                birthday = orderedData.get("birthday");
+                int month = Integer.parseInt(birthday.substring(0, 2));
+                int day = Integer.parseInt(birthday.substring(3));
+                int year = 1900;
+                birthdate = LocalDate.of(year, month, day);
+            }
 
             Member member = Member.builder()
                     .memberId(email)
@@ -103,7 +148,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             memberLoadUserDto.setProps(attributes);
 
             return memberLoadUserDto;
-        }//소셜 로그인 하면서 우리 서비스에 이메일 없을 때
+        }
         else{
             Member member = memberRepository.findByMemberId(email).get();
 
