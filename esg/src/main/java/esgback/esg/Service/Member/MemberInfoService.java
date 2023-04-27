@@ -6,6 +6,7 @@ import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -57,10 +58,10 @@ public class MemberInfoService {
 
         if (issueCode == null) {
             throw new IllegalArgumentException("인증시간이 만료되었습니다.");
-        }else {
+        } else {
             if (!codeRequestDto.getCode().equals(issueCode)) {
                 throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
-            }else{
+            } else {
                 return "인증이 완료되었습니다.";
             }
         }
@@ -94,4 +95,9 @@ public class MemberInfoService {
         memberRepository.save(newMember);
     }
 
+    public Member searchById(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
+        
+        return member;
+    }
 }

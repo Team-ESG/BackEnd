@@ -5,7 +5,9 @@ import esgback.esg.DTO.Reserve.SimpleReserveDto;
 import esgback.esg.DTO.Reserve.SuccessReserveDto;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.Response;
+import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.Reserve.Reserve;
+import esgback.esg.Service.Member.MemberInfoService;
 import esgback.esg.Service.Reserve.ReserveService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +25,13 @@ import java.util.stream.Collectors;
 public class ReserveController {
     private final ReserveService reserveService;
     private final Response response;
+    private final MemberInfoService memberInfoService;
 
-    @PostMapping("/main/item/{item_id}/reserve")
-    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("item_id") Long itemId, Principal principal) {
-        if (principal == null) return response.fail("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND);
-
-        Long memberId = Long.parseLong(principal.getName());
+    @PostMapping("/main/item/{member_id}/{item_id}/reserve")
+    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("member_id") Long memberId, @PathVariable("item_id") Long itemId, Principal principal) {
 
         try {
+            Member member = memberInfoService.searchById(memberId);
             Reserve updateReserve = reserveService.reserve(wantReserveDto, memberId, itemId);
 
             SuccessReserveDto successReserveDto = SuccessReserveDto.builder()
@@ -41,15 +42,15 @@ public class ReserveController {
                     .build();
 
             return response.success(successReserveDto);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/main/reserveList")
-    public ResponseEntity<?> getAllReserve(Principal principal) {
-        Long memberId = Long.parseLong(principal.getName());
+    @GetMapping("/main/{member_id}/reserveList")
+    public ResponseEntity<?> getAllReserve(@PathVariable("member_id") Long memberId, Principal principal) {
         try {
+            Member member = memberInfoService.searchById(memberId);
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
@@ -57,7 +58,7 @@ public class ReserveController {
                     .collect(Collectors.toList());
 
             return response.success(simpleReserveDtoList);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
