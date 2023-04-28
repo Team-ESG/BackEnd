@@ -1,7 +1,11 @@
 package esgback.esg.Security.Filter;
 
+import com.google.gson.Gson;
+import esgback.esg.DTO.Member.MemberReturnDto;
+import esgback.esg.Domain.Member.Member;
 import esgback.esg.Exception.AccessTokenException;
-import esgback.esg.Security.TryUserDetailService;
+import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,6 +15,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,12 +24,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AccessTokenCheckFilter extends OncePerRequestFilter {
+public class TokenCheckFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-    private final TryUserDetailService tryUserDetailService;
+    private final CustomUserDetailService customUserDetailService;
+    private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,7 +49,7 @@ public class AccessTokenCheckFilter extends OncePerRequestFilter {
 
             String id = (String) value.get("id");
 
-            UserDetails userDetails = tryUserDetailService.loadUserByUsername(id);
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(id);
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
@@ -65,6 +74,10 @@ public class AccessTokenCheckFilter extends OncePerRequestFilter {
 
         if (!tokenType.equalsIgnoreCase("Bearer")) {
             throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.BADTYPE);
+        }
+
+        if (redisTemplate.opsForValue().get(tokenContent) != null) {
+            throw new AccessTokenException(AccessTokenException.TOKEN_ERROR.LOGOUT);//redis에 해당 값으로 value 있으면 logout 된 상태임
         }
 
         try {

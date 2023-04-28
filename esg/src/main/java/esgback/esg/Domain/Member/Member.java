@@ -31,9 +31,10 @@ public class Member {
     private LocalDate birthDate;
     private int discountPrice = 0;
     private String phoneNumber;
+    private Boolean social;
 
     @Builder
-    public Member(Long id, String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, int discountPrice, String phoneNumber){
+    public Member(Long id, String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, int discountPrice, String phoneNumber, Boolean social){
         this.id = id;
         this.memberId = memberId;
         this.password = password;
@@ -45,6 +46,7 @@ public class Member {
         this.birthDate = birthDate;
         this.discountPrice = discountPrice;
         this.phoneNumber = phoneNumber;
+        this.social = social;
     }
 
     public static Member createMember(MemberJoinDto memberJoinDto, String encodePassword) {//dto -> entity로 변환
@@ -58,6 +60,7 @@ public class Member {
                 .sex(memberJoinDto.getSex())
                 .birthDate(memberJoinDto.getBirthDate())
                 .phoneNumber(memberJoinDto.getPhoneNumber())
+                .social(memberJoinDto.getSocial())
                 .build();
 
         return member;
@@ -90,6 +93,24 @@ public class Member {
                 .nickName(nickName)
                 .role(member.getRole())
                 .address(member.getAddress())
+                .sex(member.getSex())
+                .birthDate(member.getBirthDate())
+                .discountPrice(member.getDiscountPrice())
+                .phoneNumber(member.getPhoneNumber())
+                .build();
+
+        return newMember;
+    }
+
+    public static Member updateAddress(Member member, Address address) {
+        Member newMember = Member.builder()
+                .id(member.getId())
+                .memberId(member.getMemberId())
+                .password(member.getPassword())
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .role(member.getRole())
+                .address(address)
                 .sex(member.getSex())
                 .birthDate(member.getBirthDate())
                 .discountPrice(member.getDiscountPrice())
