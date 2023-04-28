@@ -76,7 +76,7 @@ public class CustomSecurityConfig{
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
 
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate);
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository);
 
         SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate);
 

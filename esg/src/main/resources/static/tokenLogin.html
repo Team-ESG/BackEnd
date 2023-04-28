@@ -18,6 +18,8 @@
             .then(response => {
                 alert('Token generated successfully!');
 
+                console.log(response)
+
                 let accessToken = response.data.accessToken;
                 let refreshToken = response.data.refreshToken;
 
