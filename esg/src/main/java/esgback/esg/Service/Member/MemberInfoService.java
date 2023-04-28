@@ -113,4 +113,17 @@ public class MemberInfoService {
         memberRepository.save(newMember);
     }
 
+    public Member findMemberInfo(String authorization) {
+        String token = authorization.substring(7);
+
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
+
+        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        return member;
+    }
+
 }

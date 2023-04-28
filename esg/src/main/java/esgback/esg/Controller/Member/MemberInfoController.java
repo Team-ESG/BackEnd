@@ -5,6 +5,7 @@ import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Domain.Member.Address;
+import esgback.esg.Domain.Member.Member;
 import esgback.esg.Service.Member.MemberInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,16 @@ public class MemberInfoController {
         try{
             memberInfoService.resetAddress(address, authorization);
             return response.success("주소 재설정 완료");
+        }catch(Exception e){
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("auth/info/member")
+    public ResponseEntity<?> sendInfo(@RequestHeader("authorization") String authorization) {
+        try{
+            Member member = memberInfoService.findMemberInfo(authorization);
+            return response.success(member, "success", HttpStatus.OK);
         }catch(Exception e){
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
