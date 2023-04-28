@@ -76,16 +76,4 @@ public class MemberJoinController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }//인증번호 검증
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/auth/hello")
-    public String hello() {
-        return "Hello";
-    }
-    /**
-     * 권한에 따라 접근 가능 여부 테스트 용도입니다.
-     * 1. ROLE_USER
-     * 2. ROLE_ADMIN
-     * 권한 변경을 하시려면 hasRole 내의 인자를 변경하면 됩니다.
-     */
 }

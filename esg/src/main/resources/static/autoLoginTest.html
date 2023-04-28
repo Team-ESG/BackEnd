@@ -26,8 +26,8 @@
 <script>
 
 
-  const oldAccessToken = localStorage.getItem("accessToken")
-  const oldRefreshToken = localStorage.getItem("refreshToken")
+  const oldAccessToken = null
+  const oldRefreshToken = null
 
   document.querySelector(".accessOld").innerHTML = oldAccessToken
   document.querySelector(".refreshOld").innerHTML = oldRefreshToken
@@ -37,7 +37,7 @@
   document.querySelector(".btn1").addEventListener("click", () => {
 
 
-    axios.post('http://localhost:8080/refreshToken',
+    axios.post('http://localhost:8080/autoLogin',
             {accessToken: oldAccessToken, refreshToken: oldRefreshToken})
             .then(res => {
               console.log(res.data)
