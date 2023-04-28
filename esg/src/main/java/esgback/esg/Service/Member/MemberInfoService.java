@@ -4,6 +4,7 @@ import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
+import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.Domain.Member.Address;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
@@ -113,7 +114,7 @@ public class MemberInfoService {
         memberRepository.save(newMember);
     }
 
-    public Member findMemberInfo(String authorization) {
+    public MemberReturnDto findMemberInfo(String authorization) {
         String token = authorization.substring(7);
 
         Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
@@ -123,7 +124,17 @@ public class MemberInfoService {
 
         Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
 
-        return member;
+        MemberReturnDto memberReturnDto = MemberReturnDto.builder()
+                .memberId(member.getMemberId())
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .address(member.getAddress())
+                .sex(member.getSex())
+                .discountPrice(member.getDiscountPrice())
+                .build();
+
+
+        return memberReturnDto;
     }
 
 }

@@ -3,6 +3,7 @@ package esgback.esg.Controller.Member;
 import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
+import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Domain.Member.Address;
 import esgback.esg.Domain.Member.Member;
@@ -79,7 +80,7 @@ public class MemberInfoController {
     @GetMapping("auth/info/member")
     public ResponseEntity<?> sendInfo(@RequestHeader("authorization") String authorization) {
         try{
-            Member member = memberInfoService.findMemberInfo(authorization);
+            MemberReturnDto member = memberInfoService.findMemberInfo(authorization);
             return response.success(member, "success", HttpStatus.OK);
         }catch(Exception e){
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
