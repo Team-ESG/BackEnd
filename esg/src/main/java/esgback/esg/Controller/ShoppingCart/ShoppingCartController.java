@@ -27,6 +27,6 @@ public class ShoppingCartController {
 
     @GetMapping("/main/item/{member_id}/cart")
     public ResponseEntity<?> getCartDetail(@PathVariable("member_id") Long memberId) {
-
+        return response.success(shoppingCartService.getShoppingCartItems(memberId));
     }
 }

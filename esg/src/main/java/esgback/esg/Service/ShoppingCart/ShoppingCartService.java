@@ -49,4 +49,16 @@ public class ShoppingCartService {
         shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + shoppingCartListedItem.getTotalPrice());
     }
 
+    public List<ItemDto> getShoppingCartItems(Long memberId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(memberId);
+
+        List<ItemDto> result = null;
+
+        for (ShoppingCartListedItem shoppingCartListedItem : shoppingCart.getShoppingCartListedItems()) {
+            Item item = shoppingCartListedItem.getItem();
+            result.add(new ItemDto(item.getMarket().getOwnerName(), item.getName(), item.getExpirationDate(), item.getPhotoUrl(), item.getItemDetail(), item.getOriginalPrice(), item.getDiscountPrice(), item.getRegisterDate(), item.getItemQuantity(), item.getWishedItemAddedCount()));
+        }
+
+        return result;
+    }
 }
