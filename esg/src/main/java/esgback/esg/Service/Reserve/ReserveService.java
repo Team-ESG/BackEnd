@@ -67,7 +67,7 @@ public class ReserveService {
         return reserve;
     }
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 10000)
     public void updateReserveStates() {
         LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
         List<Reserve> failedReserveList = reserveRepository.findByReserveStateAndReserveDateBefore(ReserveState.RESERVED, thirtyMinutesAgo);
@@ -75,6 +75,9 @@ public class ReserveService {
         for (Reserve reserve : failedReserveList) {
             reserve.setReserveState(ReserveState.RESERVE_FAIL);
             reserveRepository.save(reserve);
+            Item item = reserve.getItem();
+            item.setReservedQuantity(item.getReservedQuantity() - reserve.getQuantity());
+            item.setItemQuantity(item.getItemQuantity() + reserve.getQuantity());
         }
     }
 
@@ -83,5 +86,9 @@ public class ReserveService {
 
         reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
         reserveRepository.save(reserve);
+
+        Item item = reserve.getItem();
+        item.setReservedQuantity(item.getReservedQuantity() - reserve.getQuantity());
+        itemRepository.save(item);
     }
 }

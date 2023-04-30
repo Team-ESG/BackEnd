@@ -25,6 +25,7 @@ public class Reserve {
 
     @OneToOne
     @JoinColumn(name = "item_id")
+    @Getter
     private Item item;
 
     private LocalDateTime reserveDate;

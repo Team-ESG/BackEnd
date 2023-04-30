@@ -28,7 +28,7 @@ public class ReserveController {
     private final MemberInfoService memberInfoService;
 
     @PostMapping("/main/item/{member_id}/{item_id}/reserve")
-    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("member_id") Long memberId, @PathVariable("item_id") Long itemId, Principal principal) {
+    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("member_id") Long memberId, @PathVariable("item_id") Long itemId) {
 
         try {
             Member member = memberInfoService.searchById(memberId);
@@ -76,7 +76,7 @@ public class ReserveController {
         }
     }
 
-    @PostMapping("/main/reserveList/{reserve_id}")
+    @PostMapping("/main/reserveList/{reserve_id}/complete")
     public ResponseEntity<?> completeReserve(@PathVariable("reserve_id") Long reserveId) {
         try {
             Reserve reserve = reserveService.findById(reserveId);
