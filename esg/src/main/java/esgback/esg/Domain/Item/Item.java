@@ -20,7 +20,6 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "market_id")
-    @Setter
     private Market market;
 
     private String name;

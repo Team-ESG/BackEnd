@@ -62,10 +62,10 @@ public class MemberInfoService {
 
         if (issueCode == null) {
             throw new IllegalArgumentException("인증시간이 만료되었습니다.");
-        }else {
+        } else {
             if (!codeRequestDto.getCode().equals(issueCode)) {
                 throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
-            }else{
+            } else {
                 return "인증이 완료되었습니다.";
             }
         }
@@ -98,7 +98,7 @@ public class MemberInfoService {
 
         memberRepository.save(newMember);
     }
-
+    
     public void resetAddress(Address address, String authorization) {
         String token = authorization.substring(7);
 
@@ -136,5 +136,4 @@ public class MemberInfoService {
 
         return memberReturnDto;
     }
-
 }
