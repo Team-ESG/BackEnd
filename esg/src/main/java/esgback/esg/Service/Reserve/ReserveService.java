@@ -77,4 +77,11 @@ public class ReserveService {
             reserveRepository.save(reserve);
         }
     }
+
+    public void completeReserve(Long reserveId) {
+        Reserve reserve = findById(reserveId);
+
+        reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
+        reserveRepository.save(reserve);
+    }
 }

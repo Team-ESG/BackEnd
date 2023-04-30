@@ -76,4 +76,15 @@ public class ReserveController {
         }
     }
 
+    @PostMapping("/main/reserveList/{reserve_id}")
+    public ResponseEntity<?> completeReserve(@PathVariable("reserve_id") Long reserveId) {
+        try {
+            Reserve reserve = reserveService.findById(reserveId);
+
+            reserveService.completeReserve(reserveId);
+            return response.success("구매 성공");
+        } catch (NoResultException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
