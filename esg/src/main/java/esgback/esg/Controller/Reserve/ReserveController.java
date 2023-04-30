@@ -54,7 +54,7 @@ public class ReserveController {
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
-                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getReserveDate(), reserve.getIsSuccess(), reserve.getPrice(), reserve.getQuantity()))
+                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
                     .collect(Collectors.toList());
 
             return response.success(simpleReserveDtoList);
@@ -68,7 +68,7 @@ public class ReserveController {
         try {
             Reserve reserve = reserveService.findById(reserveId);
 
-            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getMember(), reserve.getItem(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getIsSuccess(), reserve.getQuantity(), reserve.getPrice());
+            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getMember(), reserve.getItem(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getReserveState(), reserve.getQuantity(), reserve.getPrice());
 
             return response.success(reserveDetailDto);
         } catch (NoResultException e) {

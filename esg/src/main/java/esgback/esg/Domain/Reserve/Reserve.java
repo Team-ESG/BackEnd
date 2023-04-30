@@ -1,5 +1,6 @@
 package esgback.esg.Domain.Reserve;
 
+import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
@@ -28,18 +29,18 @@ public class Reserve {
 
     private LocalDateTime reserveDate;
     private LocalDateTime reserveEndDate;
-    private State isSuccess;
+    private ReserveState reserveState;
 
     private int quantity;
     private int price;
 
     @Builder
-    public Reserve(Member member, Item item, LocalDateTime reserveDate, LocalDateTime reserveEndDate, State isSuccess, int quantity, int price) {
+    public Reserve(Member member, Item item, LocalDateTime reserveDate, LocalDateTime reserveEndDate, ReserveState reserveState, int quantity, int price) {
         this.member = member;
         this.item = item;
         this.reserveDate = reserveDate;
         this.reserveEndDate = reserveEndDate;
-        this.isSuccess = isSuccess;
+        this.reserveState = reserveState;
         this.quantity = quantity;
         this.price = price;
     }

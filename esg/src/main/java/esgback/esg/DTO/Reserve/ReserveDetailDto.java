@@ -1,5 +1,6 @@
 package esgback.esg.DTO.Reserve;
 
+import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
@@ -20,7 +21,7 @@ public class ReserveDetailDto implements Serializable {
     private final Item item;
     private final LocalDateTime reserveDate;
     private final LocalDateTime reserveEndDate;
-    private final State isSuccess;
+    private final ReserveState reserveState;
     private final int quantity;
     private final int price;
 }
