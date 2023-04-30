@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -18,9 +19,21 @@ public class ShoppingCart {
 
     @OneToOne
     @JoinColumn(name = "member_id")
+    @Setter
     private Member member;
 
     @OneToMany
     @JoinColumn(name = "shoppingCartListedItem_id")
     private List<ShoppingCartListedItem> shoppingCartListedItems;
+
+    @Setter
+    private int totalPrice;
+
+    public static ShoppingCart createShoppingCart(Member member) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setMember(member);
+        shoppingCart.setTotalPrice(0);
+
+        return shoppingCart;
+    }
 }
