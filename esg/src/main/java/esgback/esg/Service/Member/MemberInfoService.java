@@ -71,9 +71,13 @@ public class MemberInfoService {
         }
     }
 
-    public void resetPwd(ResetDto resetDto) {
+    public void resetPwd(ResetDto resetDto, String authorization) {
+        String token = authorization.substring(7);
 
-        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
 
@@ -84,8 +88,13 @@ public class MemberInfoService {
         memberRepository.save(newMember);
     }
 
-    public void resetNickname(ResetDto resetDto) {
-        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+    public void resetNickname(ResetDto resetDto, String authorization) {
+        String token = authorization.substring(7);
+
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
         boolean isNickname = memberRepository.existsByNickName(resetDto.getNickname());
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
