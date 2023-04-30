@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ShoppingCartReserveRepository extends JpaRepository<ShoppingCartReserve, Long> {
-    List<ShoppingCartReserve> findByStateAndReserveDateBefore(State state, LocalDateTime time);
+    List<ShoppingCartReserve> findByReservedStateAndReserveDateBefore(State state, LocalDateTime time);
 }

@@ -99,7 +99,7 @@ public class ShoppingCartService {
     @Scheduled(fixedRate = 10000)
     public void updateReserveStates() {
         LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
-        List<ShoppingCartReserve> failedReserveList = shoppingCartReserveRepository.findByStateAndReserveDateBefore(State.True, thirtyMinutesAgo);
+        List<ShoppingCartReserve> failedReserveList = shoppingCartReserveRepository.findByReservedStateAndReserveDateBefore(State.True, thirtyMinutesAgo);
 
         for (ShoppingCartReserve reserve : failedReserveList) {
             reserve.setReservedState(State.False);
