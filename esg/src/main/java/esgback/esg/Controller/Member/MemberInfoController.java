@@ -46,21 +46,21 @@ public class MemberInfoController {
         }
     }//회원 비밀번호 초기화 가능한지 검증 => 비밀번호 분실 시, 비밀번호 재설정 자체가 따로 필요해 보임
 
-    @PatchMapping("/info/reset/pwd")
-    public ResponseEntity<?> resetMemberPwd(@RequestBody ResetDto resetDto) {
+    @PatchMapping("auth/info/reset/pwd")
+    public ResponseEntity<?> resetMemberPwd(@RequestBody ResetDto resetDto, @RequestHeader("authorization") String authorization) {
         try {
-            memberInfoService.resetPwd(resetDto);
+            memberInfoService.resetPwd(resetDto, authorization);
             return response.success("비밀번호 재설정 완료");
         } catch (IllegalArgumentException e) {
             return response.fail("해당하는 계정이 없습니다.", HttpStatus.NOT_FOUND);
         }
     }//회원 비밀번호 재설정
 
-    @PatchMapping("/info/reset/nickname")
-    public ResponseEntity<?> resetNickname(@RequestBody ResetDto resetDto) {
+    @PatchMapping("auth/info/reset/nickname")
+    public ResponseEntity<?> resetNickname(@RequestBody ResetDto resetDto, @RequestHeader("authorization") String authorization) {
 
         try {
-            memberInfoService.resetNickname(resetDto);
+            memberInfoService.resetNickname(resetDto, authorization);
             return response.success("닉네임 재설정 완료");
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
