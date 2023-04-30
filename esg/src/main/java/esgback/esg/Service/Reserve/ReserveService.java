@@ -1,6 +1,7 @@
 package esgback.esg.Service.Reserve;
 
 import esgback.esg.DTO.Reserve.WantReserveDto;
+import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
@@ -11,9 +12,11 @@ import esgback.esg.Repository.ReserveRepository;
 import esgback.esg.Service.Item.ItemService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +42,7 @@ public class ReserveService {
                 .item(item)
                 .reserveDate(wantReserveDto.getReserveDate())
                 .reserveEndDate(wantReserveDto.getReserveDate().plusMinutes(30))
-                .isSuccess(State.False)
+                .reserveState(ReserveState.RESERVED)
                 .quantity(wantReserveDto.getQuantity())
                 .price(wantReserveDto.getQuantity() * item.getDiscountPrice())
                 .build();
@@ -62,5 +65,16 @@ public class ReserveService {
         Reserve reserve = reserveRepository.findById(reserveId).orElseThrow(() -> new NoResultException("해당 예약내역은 존재하지 않습니다."));
 
         return reserve;
+    }
+
+    @Scheduled(fixedRate = 2000)
+    public void updateReserveStates() {
+        LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
+        List<Reserve> failedReserveList = reserveRepository.findByReserveStateAndReserveDateBefore(ReserveState.RESERVED, thirtyMinutesAgo);
+
+        for (Reserve reserve : failedReserveList) {
+            reserve.setReserveState(ReserveState.RESERVE_FAIL);
+            reserveRepository.save(reserve);
+        }
     }
 }

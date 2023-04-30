@@ -29,6 +29,8 @@ public class Reserve {
 
     private LocalDateTime reserveDate;
     private LocalDateTime reserveEndDate;
+    @Setter
+    @Enumerated(value = EnumType.STRING)
     private ReserveState reserveState;
 
     private int quantity;
