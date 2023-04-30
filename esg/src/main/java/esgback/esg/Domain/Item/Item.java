@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +31,6 @@ public class Item {
     private int discountPrice;
     private Date registerDate;
     private int itemQuantity;
+    private int reservedQuantity;
     private int wishedItemAddedCount;
 }

@@ -27,6 +27,7 @@ public class ShoppingCartListedItem {
     private int shoppingCartListedItemQuantity;
     private int totalPrice;
 
+
     public static ShoppingCartListedItem createShoppingCartListedItem(ShoppingCart shoppingCart, Item item, int shoppingCartListedItemQuantity) {
         ShoppingCartListedItem shoppingCartListedItem = new ShoppingCartListedItem();
         shoppingCartListedItem.setShoppingCart(shoppingCart);

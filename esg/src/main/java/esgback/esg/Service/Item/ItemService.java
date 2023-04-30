@@ -24,4 +24,10 @@ public class ItemService {
 
         return new ItemDto(item.getMarket().getOwnerName(), item.getName(), item.getExpirationDate(), item.getPhotoUrl(), item.getItemDetail(), item.getOriginalPrice(), item.getDiscountPrice(), item.getRegisterDate(), item.getItemQuantity(), item.getWishedItemAddedCount());
     }
+
+
+    public void reserve(Item item, int quantity) {
+        item.setItemQuantity(item.getItemQuantity() - quantity);
+        item.setReservedQuantity(item.getReservedQuantity() + quantity);
+    }
 }

@@ -25,8 +25,20 @@ public class ShoppingCartController {
         }
     }
 
-    @GetMapping("/main/item/{member_id}/cart")
+    @GetMapping("/main/{member_id}/cart")
     public ResponseEntity<?> getCartDetail(@PathVariable("member_id") Long memberId) {
         return response.success(shoppingCartService.getShoppingCartItems(memberId));
     }
+
+    @PostMapping("/main/{member_id}/cart")
+    public ResponseEntity<?> reserve(@PathVariable("member_id") Long memberId) {
+        try {
+            shoppingCartService.reserve(memberId);
+            return response.success("장바구니 예약 완료");
+        } catch (NoResultException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    
 }

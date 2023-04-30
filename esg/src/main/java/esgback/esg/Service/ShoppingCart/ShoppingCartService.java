@@ -2,18 +2,24 @@ package esgback.esg.Service.ShoppingCart;
 
 import esgback.esg.DTO.Item.ItemDto;
 import esgback.esg.DTO.ShoppingCartRequestDto;
+import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.ShoppingCart.ShoppingCart;
 import esgback.esg.Domain.ShoppingCart.ShoppingCartListedItem;
+import esgback.esg.Domain.ShoppingCart.ShoppingCartReserve;
+import esgback.esg.Repository.ShoppingCartReserveRepository;
 import esgback.esg.Repository.ItemRepository;
 import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Repository.ShoppingCartListedItemRepository;
 import esgback.esg.Repository.ShoppingCartRepository;
+import esgback.esg.Service.Item.ItemService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,6 +29,8 @@ public class ShoppingCartService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final ShoppingCartListedItemRepository shoppingCartListedItemRepository;
+    private final ItemService itemService;
+    private final ShoppingCartReserveRepository shoppingCartReserveRepository;
 
     public void addCart(ShoppingCartRequestDto shoppingCartRequestDto) {
         Member member = memberRepository.findById(shoppingCartRequestDto.getMemberId()).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
@@ -60,5 +68,49 @@ public class ShoppingCartService {
         }
 
         return result;
+    }
+
+    public void reserve(Long memberId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(memberId);
+        List<ShoppingCartListedItem> shoppingCartListedItems = shoppingCart.getShoppingCartListedItems();
+
+        for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItems) {
+            Item item = shoppingCartListedItem.getItem();
+
+            if (item.getItemQuantity() < shoppingCartListedItem.getShoppingCartListedItemQuantity()) {
+                throw new IllegalArgumentException("재고 수량이 부족합니다.");
+            }
+        }
+
+        for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItems) {
+            Item item = shoppingCartListedItem.getItem();
+            itemService.reserve(item, shoppingCartListedItem.getShoppingCartListedItemQuantity());
+        }
+
+        ShoppingCartReserve shoppingCartReserve = ShoppingCartReserve.builder()
+                .reservedState(State.True)
+                .reserveDate(LocalDateTime.now())
+                .shoppingCart(shoppingCart)
+                .build();
+
+        shoppingCartReserveRepository.save(shoppingCartReserve);
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void updateReserveStates() {
+        LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
+        List<ShoppingCartReserve> failedReserveList = shoppingCartReserveRepository.findByStateAndReserveDateBefore(State.True, thirtyMinutesAgo);
+
+        for (ShoppingCartReserve reserve : failedReserveList) {
+            reserve.setReservedState(State.False);
+            shoppingCartReserveRepository.save(reserve);
+
+            for (ShoppingCartListedItem shoppingCartListedItem : reserve.getShoppingCart().getShoppingCartListedItems()) {
+                Item item = shoppingCartListedItem.getItem();
+                int quantity = shoppingCartListedItem.getShoppingCartListedItemQuantity();
+                item.setReservedQuantity(item.getReservedQuantity() - quantity);
+                item.setItemQuantity(item.getItemQuantity() + quantity);
+            }
+        }
     }
 }
