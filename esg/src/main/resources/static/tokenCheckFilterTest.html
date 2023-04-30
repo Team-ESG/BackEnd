@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TokenCheckFilter_Test</title>
+</head>
+<body>
+<h1>I Request Data for starting with "api</h1>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+    async function callTest(){
+        const response = await axios.get("http://localhost:8080/auth/hello")
+        return response.data
+    }
+
+    callTest()
+        .then(data => console.log(data))
+        .catch(e => console.log(e));
+
+
+</script>
+
+</body>
+</html>

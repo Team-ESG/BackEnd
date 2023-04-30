@@ -5,7 +5,6 @@ import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberJoinService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public Boolean checkIdDuplicate(String email) {// id 중복확인
         boolean check = memberRepository.existsByMemberId(email);

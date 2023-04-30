@@ -1,15 +1,18 @@
 package esgback.esg.Config;
 
+import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Security.Filter.LoginFilter;
-import esgback.esg.Security.Filter.AccessTokenCheckFilter;
-import esgback.esg.Security.Filter.RefreshTokenFilter;
+import esgback.esg.Security.Filter.TokenCheckFilter;
+import esgback.esg.Security.Filter.AutoLoginCheckFilter;
 import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
+import esgback.esg.Security.handler.SocialLoginSuccessHandler;
 import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -33,6 +36,8 @@ public class CustomSecurityConfig{
 
     private final CustomUserDetailService customUserDetailService;
     private final JWTUtil jwtUtil;
+    private final MemberRepository memberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -71,7 +76,9 @@ public class CustomSecurityConfig{
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
 
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil);
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository);
+
+        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate);
 
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
@@ -82,13 +89,15 @@ public class CustomSecurityConfig{
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        http.addFilterBefore(new RefreshTokenFilter("/refreshToken", jwtUtil), AccessTokenCheckFilter.class);//refreshTokenCheckFilter
+        http.addFilterBefore(new AutoLoginCheckFilter("/autoLogin", jwtUtil, redisTemplate, memberRepository), TokenCheckFilter.class);//refreshTokenCheckFilter
 
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함
         http.formLogin().disable();//기본적인 formLogin 화면을 출력 안한다
         http.cors();
-        http.oauth2Login().loginPage("/login");
+        http.oauth2Login()
+                .loginPage("/login")
+                .successHandler(socialLoginSuccessHandler);
 
         return http.build();
     }
@@ -107,7 +116,7 @@ public class CustomSecurityConfig{
         return source;
     }//cors 해결 위함
 
-    private AccessTokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailService customUserDetailService) {
-        return new AccessTokenCheckFilter(jwtUtil, customUserDetailService);
+    private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, CustomUserDetailService customUserDetailService) {
+        return new TokenCheckFilter(jwtUtil, customUserDetailService, memberRepository, redisTemplate);
     }
 }
