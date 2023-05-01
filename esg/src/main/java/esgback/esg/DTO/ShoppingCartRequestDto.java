@@ -1,6 +1,5 @@
 package esgback.esg.DTO;
 
-import esgback.esg.Domain.Member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShoppingCartRequestDto implements Serializable {
-    private Long memberId;
     private Long itemId;
     private int quantity;
 }

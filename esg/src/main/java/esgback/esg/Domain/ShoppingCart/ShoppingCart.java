@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -21,10 +19,6 @@ public class ShoppingCart {
     @JoinColumn(name = "member_id")
     @Setter
     private Member member;
-
-    @OneToMany
-    @JoinColumn(name = "shoppingCartListedItem_id")
-    private List<ShoppingCartListedItem> shoppingCartListedItems;
 
     @Setter
     private int totalPrice;
