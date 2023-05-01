@@ -31,7 +31,6 @@ public class ReserveController {
     public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("member_id") Long memberId, @PathVariable("item_id") Long itemId) {
 
         try {
-            Member member = memberInfoService.searchById(memberId);
             Reserve updateReserve = reserveService.reserve(wantReserveDto, memberId, itemId);
 
             SuccessReserveDto successReserveDto = SuccessReserveDto.builder()
@@ -50,7 +49,6 @@ public class ReserveController {
     @GetMapping("/main/{member_id}/reserveList")
     public ResponseEntity<?> getAllReserve(@PathVariable("member_id") Long memberId, Principal principal) {
         try {
-            Member member = memberInfoService.searchById(memberId);
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
