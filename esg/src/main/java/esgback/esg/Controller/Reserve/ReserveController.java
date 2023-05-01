@@ -5,10 +5,10 @@ import esgback.esg.DTO.Reserve.SimpleReserveDto;
 import esgback.esg.DTO.Reserve.SuccessReserveDto;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.Response;
-import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.Reserve.Reserve;
 import esgback.esg.Service.Member.MemberInfoService;
 import esgback.esg.Service.Reserve.ReserveService;
+import esgback.esg.Util.JWTUtil;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,11 +26,16 @@ public class ReserveController {
     private final ReserveService reserveService;
     private final Response response;
     private final MemberInfoService memberInfoService;
+    private final JWTUtil jwtUtil;
 
-    @PostMapping("/main/item/{member_id}/{item_id}/reserve")
-    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @PathVariable("member_id") Long memberId, @PathVariable("item_id") Long itemId) {
-
+    @PostMapping("/main/item/{item_id}/reserve")
+    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @RequestHeader("authorization") String authorization, @PathVariable("item_id") Long itemId) {
         try {
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String memberId = String.valueOf(stringObjectMap.get("id"));
+
             Reserve updateReserve = reserveService.reserve(wantReserveDto, memberId, itemId);
 
             SuccessReserveDto successReserveDto = SuccessReserveDto.builder()
@@ -46,9 +51,14 @@ public class ReserveController {
         }
     }
 
-    @GetMapping("/main/{member_id}/reserveList")
-    public ResponseEntity<?> getAllReserve(@PathVariable("member_id") Long memberId, Principal principal) {
+    @GetMapping("/main/reserveList")
+    public ResponseEntity<?> getAllReserve(@RequestHeader("authorization") String authorization) {
         try {
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String memberId = String.valueOf(stringObjectMap.get("id"));
+
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
@@ -66,7 +76,7 @@ public class ReserveController {
         try {
             Reserve reserve = reserveService.findById(reserveId);
 
-            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getMember(), reserve.getItem(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getReserveState(), reserve.getQuantity(), reserve.getPrice());
+            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getItem().getName(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getReserveState(), reserve.getQuantity(), reserve.getPrice());
 
             return response.success(reserveDetailDto);
         } catch (NoResultException e) {
