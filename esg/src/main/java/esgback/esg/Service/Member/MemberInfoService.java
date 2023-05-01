@@ -4,8 +4,11 @@ import esgback.esg.DTO.Code.PwdCodeRequestDto;
 import esgback.esg.DTO.Code.ResetDto;
 import esgback.esg.DTO.Member.MemberIdDto;
 import esgback.esg.DTO.Code.CodeRequestDto;
+import esgback.esg.DTO.Member.MemberReturnDto;
+import esgback.esg.Domain.Member.Address;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,6 +26,7 @@ public class MemberInfoService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -57,20 +62,25 @@ public class MemberInfoService {
 
         if (issueCode == null) {
             throw new IllegalArgumentException("인증시간이 만료되었습니다.");
-        }else {
+        } else {
             if (!codeRequestDto.getCode().equals(issueCode)) {
                 throw new IllegalArgumentException("인증번호가 일치하지 않습니다.");
-            }else{
+            } else {
                 return "인증이 완료되었습니다.";
             }
         }
     }
 
-    public void resetPwd(ResetDto resetDto) {
+    public void resetPwd(ResetDto resetDto, String authorization) {
+        String token = authorization.substring(7);
 
-        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
         String encodePassword = passwordEncoder.encode(resetDto.getPwd());
 
         Member newMember = Member.updatePwd(oldMember, encodePassword);
@@ -78,13 +88,61 @@ public class MemberInfoService {
         memberRepository.save(newMember);
     }
 
-    public void resetNickname(ResetDto resetDto) {
-        Optional<Member> find = memberRepository.findByMemberId(resetDto.getId());
+    public void resetNickname(ResetDto resetDto, String authorization) {
+        String token = authorization.substring(7);
+
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
+        boolean isNickname = memberRepository.existsByNickName(resetDto.getNickname());
 
         Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        if (isNickname) {
+            throw new IllegalArgumentException("중복된 닉네임입니다.");
+        }
+
         Member newMember = Member.updateNick(oldMember, resetDto.getNickname());
 
         memberRepository.save(newMember);
     }
+    
+    public void resetAddress(Address address, String authorization) {
+        String token = authorization.substring(7);
 
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
+
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        Member newMember = Member.updateAddress(oldMember, address);
+
+        memberRepository.save(newMember);
+    }
+
+    public MemberReturnDto findMemberInfo(String authorization) {
+        String token = authorization.substring(7);
+
+        Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+        String memberId = String.valueOf(stringObjectMap.get("id"));
+
+        Optional<Member> find = memberRepository.findByMemberId(memberId);
+
+        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+
+        MemberReturnDto memberReturnDto = MemberReturnDto.builder()
+                .memberId(member.getMemberId())
+                .name(member.getName())
+                .nickName(member.getNickName())
+                .address(member.getAddress())
+                .sex(member.getSex())
+                .discountPrice(member.getDiscountPrice())
+                .build();
+
+
+        return memberReturnDto;
+    }
 }

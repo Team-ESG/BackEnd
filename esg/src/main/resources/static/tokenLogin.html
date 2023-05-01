@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page</title>
+</head>
+<body>
+<button id="generateTokenBtn">Generate Token</button>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const generateTokenBtn = document.querySelector('#generateTokenBtn');
+
+    generateTokenBtn.addEventListener('click', () => {
+        const data = { id: 'member01', pwd: '1234' };
+
+        axios.post('http://localhost:8080/login', data)
+            .then(response => {
+                alert('Token generated successfully!');
+
+                console.log(response)
+
+                let accessToken = response.data.accessToken;
+                let refreshToken = response.data.refreshToken;
+
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("refreshToken", refreshToken);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Error generating token');
+            });
+    });
+</script>
+</body>
+</html>

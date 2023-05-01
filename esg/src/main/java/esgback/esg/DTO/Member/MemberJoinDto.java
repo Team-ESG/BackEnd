@@ -37,8 +37,11 @@ public class MemberJoinDto {
     @NotEmpty
     private String phoneNumber;
 
+    @NotEmpty
+    private Boolean social;
+
     @Builder
-    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber){
+    public MemberJoinDto(String memberId, String password, String name, String nickname, Address address, Sex sex, String birthDate, String phoneNumber, Boolean social){
         this.memberId = memberId;
         this.password = password;
         this.name = name;
@@ -47,5 +50,6 @@ public class MemberJoinDto {
         this.sex = sex;
         this.birthDate = LocalDate.parse(birthDate);
         this.phoneNumber = phoneNumber;
+        this.social = social;
     }
 }

@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ResetDto {
 
-    String id;
     String pwd;
     String nickname;
 
     @Builder
-    public ResetDto(String id, String pwd, String nickname) {
-        this.id = id;
+    public ResetDto(String pwd, String nickname) {
         this.pwd = pwd;
         this.nickname = nickname;
     }

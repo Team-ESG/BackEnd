@@ -10,13 +10,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class TryUserDetailService implements UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -31,6 +30,7 @@ public class TryUserDetailService implements UserDetailsService {
         MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(
                 member.getMemberId(),
                 member.getPassword(),
+                true,
                 List.of(new SimpleGrantedAuthority(member.getRole().name())
                 ));
 

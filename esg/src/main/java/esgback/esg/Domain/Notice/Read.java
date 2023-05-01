@@ -3,7 +3,10 @@ package esgback.esg.Domain.Notice;
 import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -26,5 +29,8 @@ public class Read {
     private Notice notice;
 
     private Date readDate;
+
+    @Setter
+    @Enumerated(value = EnumType.STRING)
     private State isRead;
 }

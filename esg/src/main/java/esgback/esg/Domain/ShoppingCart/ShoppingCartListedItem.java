@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class ShoppingCartListedItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +26,15 @@ public class ShoppingCartListedItem {
 
     private int shoppingCartListedItemQuantity;
     private int totalPrice;
+
+
+    public static ShoppingCartListedItem createShoppingCartListedItem(ShoppingCart shoppingCart, Item item, int shoppingCartListedItemQuantity) {
+        ShoppingCartListedItem shoppingCartListedItem = new ShoppingCartListedItem();
+        shoppingCartListedItem.setShoppingCart(shoppingCart);
+        shoppingCartListedItem.setItem(item);
+        shoppingCartListedItem.setShoppingCartListedItemQuantity(shoppingCartListedItemQuantity);
+        shoppingCartListedItem.setTotalPrice(item.getDiscountPrice() * shoppingCartListedItemQuantity);
+
+        return shoppingCartListedItem;
+    }
 }
