@@ -45,8 +45,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         Map<String, Object> claim = Map.of("id", authentication.getName());
 
-        String accessToken = jwtUtil.generateToken(claim, 1);//유효기간 1일 // test 위해서 일단 1분으로 바꿈
-        String refreshToken = jwtUtil.generateToken(claim, 3);//유효기간 30일 // test 위해서 일단 3분으로 바꿈
+        String accessToken = jwtUtil.generateToken(claim, 1000);//유효기간 1일 // test 위해서 일단 1분으로 바꿈
+        String refreshToken = jwtUtil.generateToken(claim, 3000);//유효기간 30일 // test 위해서 일단 3분으로 바꿈
 
         redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
 

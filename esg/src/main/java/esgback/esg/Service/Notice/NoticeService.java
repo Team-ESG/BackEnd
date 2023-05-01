@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -32,10 +30,10 @@ public class NoticeService {
         return noticeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
     }
 
-    public void readNotice(Long memberId, Long noticeId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
+    public void readNotice(String memberId, Long noticeId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원은 존재하지 않습니다."));
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
-        Read read = readRepository.findBymemberIdAndNoticeId(memberId, noticeId);
+        Read read = readRepository.findBymemberIdAndNoticeId(member.getId(), noticeId);
 
         // 사용자가 해당 공지사항을 읽은 기록이 없을 때만 read repository 업데이트 및 조회수 올려줌
         if (read == null) {

@@ -1,15 +1,15 @@
 package esgback.esg.Domain.Reserve;
 
 import esgback.esg.Domain.Enum.ReserveState;
-import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor

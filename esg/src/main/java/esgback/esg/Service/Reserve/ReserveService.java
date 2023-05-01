@@ -2,7 +2,6 @@ package esgback.esg.Service.Reserve;
 
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.Domain.Enum.ReserveState;
-import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.Reserve.Reserve;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,8 +27,8 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final ItemService itemService;
 
-    public Reserve reserve(WantReserveDto wantReserveDto, Long memberId, Long itemId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    public Reserve reserve(WantReserveDto wantReserveDto, String memberId, Long itemId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
         if (item.getItemQuantity() < wantReserveDto.getQuantity()) {
@@ -53,8 +51,9 @@ public class ReserveService {
         return updateReserve;
     }
 
-    public List<Reserve> findByMemberId(Long memberId) {
-        List<Reserve> reserveList = reserveRepository.findByMemberId(memberId);
+    public List<Reserve> findByMemberId(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        List<Reserve> reserveList = reserveRepository.findByMemberId(member.getId());
 
         if (reserveList.isEmpty()) throw new IllegalArgumentException("예약 내역이 없습니다.");
 

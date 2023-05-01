@@ -8,11 +8,7 @@ import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.ShoppingCart.ShoppingCart;
 import esgback.esg.Domain.ShoppingCart.ShoppingCartListedItem;
 import esgback.esg.Domain.ShoppingCart.ShoppingCartReserve;
-import esgback.esg.Repository.ShoppingCartReserveRepository;
-import esgback.esg.Repository.ItemRepository;
-import esgback.esg.Repository.MemberRepository;
-import esgback.esg.Repository.ShoppingCartListedItemRepository;
-import esgback.esg.Repository.ShoppingCartRepository;
+import esgback.esg.Repository.*;
 import esgback.esg.Service.Item.ItemService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +29,11 @@ public class ShoppingCartService {
     private final ItemService itemService;
     private final ShoppingCartReserveRepository shoppingCartReserveRepository;
 
-    public void addCart(ShoppingCartRequestDto shoppingCartRequestDto) {
-        Member member = memberRepository.findById(shoppingCartRequestDto.getMemberId()).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
+    public void addCart(String memberId, ShoppingCartRequestDto shoppingCartRequestDto) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
         Item item = itemRepository.findById(shoppingCartRequestDto.getItemId()).orElseThrow(() -> new NoResultException("해당 상품은 존재하지 않습니다."));
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId());
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElse(null);
 
         if (shoppingCart == null) {
             shoppingCart = ShoppingCart.createShoppingCart(member);
@@ -46,7 +43,7 @@ public class ShoppingCartService {
         ShoppingCartListedItem shoppingCartListedItem = shoppingCartListedItemRepository.findByShoppingCartIdAndItemId(shoppingCart.getId(), item.getId());
 
         if (shoppingCartListedItem == null) {
-            ShoppingCartListedItem.createShoppingCartListedItem(shoppingCart, item, shoppingCartRequestDto.getQuantity());
+            shoppingCartListedItem = ShoppingCartListedItem.createShoppingCartListedItem(shoppingCart, item, shoppingCartRequestDto.getQuantity());
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         } else {
             ShoppingCartListedItem update = shoppingCartListedItem;
@@ -55,24 +52,29 @@ public class ShoppingCartService {
         }
 
         shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + shoppingCartListedItem.getTotalPrice());
+        shoppingCartRepository.save(shoppingCart);
     }
 
-    public List<ItemDto> getShoppingCartItems(Long memberId) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(memberId);
+    public List<ItemDto> getShoppingCartItems(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new NoResultException("장바구니 목록이 존재하지 않습니다."));
 
-        List<ItemDto> result = null;
+        List<ItemDto> result = new ArrayList<>();
 
-        for (ShoppingCartListedItem shoppingCartListedItem : shoppingCart.getShoppingCartListedItems()) {
+        for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
             Item item = shoppingCartListedItem.getItem();
             result.add(new ItemDto(item.getMarket().getOwnerName(), item.getName(), item.getExpirationDate(), item.getPhotoUrl(), item.getItemDetail(), item.getOriginalPrice(), item.getDiscountPrice(), item.getRegisterDate(), item.getItemQuantity(), item.getWishedItemAddedCount()));
+            System.out.println(shoppingCartListedItem.getItem().getName());
         }
 
         return result;
     }
 
-    public void reserve(Long memberId) {
-        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(memberId);
-        List<ShoppingCartListedItem> shoppingCartListedItems = shoppingCart.getShoppingCartListedItems();
+    public void reserve(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
+
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new NoResultException("장바구니 목록이 존재하지 않습니다."));
+        List<ShoppingCartListedItem> shoppingCartListedItems = shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId());
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItems) {
             Item item = shoppingCartListedItem.getItem();
@@ -105,7 +107,7 @@ public class ShoppingCartService {
             reserve.setReservedState(State.False);
             shoppingCartReserveRepository.save(reserve);
 
-            for (ShoppingCartListedItem shoppingCartListedItem : reserve.getShoppingCart().getShoppingCartListedItems()) {
+            for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(reserve.getShoppingCart().getId())) {
                 Item item = shoppingCartListedItem.getItem();
                 int quantity = shoppingCartListedItem.getShoppingCartListedItemQuantity();
                 item.setReservedQuantity(item.getReservedQuantity() - quantity);
