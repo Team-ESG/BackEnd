@@ -17,7 +17,7 @@ public class ViewNumTest {
         Notice notice = noticeService.findById(1L);
         int viewNum = notice.getViewNum();
 
-        noticeService.readNotice(1L, 1L);
+        noticeService.readNotice(String.valueOf(1L), 1L);
 
         Assertions.assertThat(notice.getViewNum()).isNotEqualTo(viewNum + 1);
     }

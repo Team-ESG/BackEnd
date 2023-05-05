@@ -78,7 +78,7 @@ public class CustomSecurityConfig{
 
         LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository);
 
-        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate);
+        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate, memberRepository);
 
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
