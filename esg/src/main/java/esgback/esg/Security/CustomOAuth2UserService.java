@@ -21,9 +21,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final String[] specialChar = new String[]{"!", "@", "#", "$", "%", "^", "&", "&", "(", ")"};
 
     @Override
@@ -78,73 +76,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private MemberLoadUserDto generateDto(String clientName, String email, Map<String, Object> attributes) {
         boolean isMember = memberRepository.existsByMemberId(email);
 
-        String name = null;
-        String nickName = null;
-        String encodePassword = null;
-        String birthday;
-        LocalDate birthdate = null;
-        Sex sex = null;
-
         if (!isMember) {
-            if(clientName.equals("kakao")){
-                Object kakao_account = attributes.get("kakao_account");
-                LinkedHashMap orderedData = (LinkedHashMap) kakao_account;
-
-                LinkedHashMap<String, String> profile = (LinkedHashMap<String, String>)orderedData.get("profile");
-
-                sex = ((orderedData.get("gender").equals("male")) ? Sex.MAN : Sex.WOMAN);
-                name = profile.get("nickname");
-
-                encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
-
-                String randNum = Integer.toString((int) (Math.random() * 10000));
-
-                nickName = name + randNum;
-
-                birthday = (String) orderedData.get("birthday");
-                int month = Integer.parseInt(birthday.substring(0, 2));
-                int day = Integer.parseInt(birthday.substring(2));
-                int year = 1900;
-                birthdate = LocalDate.of(year, month, day);
-            }
-            else if (clientName.equals("Naver")) {
-                Object naver_account = attributes.get("response");
-                LinkedHashMap<String, String> orderedData = (LinkedHashMap<String, String>) naver_account;
-
-                sex = ((orderedData.get("gender")).equals("M")) ? Sex.MAN : Sex.WOMAN;
-                name = orderedData.get("name");
-
-                encodePassword = passwordEncoder.encode(generatePassword());//임의의 비밀번호 생성
-
-                boolean isNickName = memberRepository.existsByNickName(orderedData.get("nickname"));
-                if (isNickName) {//nickname 있을 때,
-                    String randNum = Integer.toString((int) (Math.random() * 10000));
-                    nickName = orderedData.get("nickname") + randNum;
-                }
-                else{//nickname 없을 때,
-                    nickName = orderedData.get("nickname");
-                }
-                birthday = orderedData.get("birthday");
-                int month = Integer.parseInt(birthday.substring(0, 2));
-                int day = Integer.parseInt(birthday.substring(3));
-                int year = 1900;
-                birthdate = LocalDate.of(year, month, day);
-            }
-
-            Member member = Member.builder()
-                    .memberId(email)
-                    .password(encodePassword)
-                    .name(name)
-                    .nickName(nickName)
-                    .role(Role.ROLE_USER)
-                    .sex(sex)
-                    .birthDate(birthdate)
-                    .social(true)
-                    .build();
-
-            memberRepository.save(member);
-
-            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(email, encodePassword, member.getSocial(), Arrays.asList(new SimpleGrantedAuthority(Role.ROLE_USER.name())));
+            String encodePassword =generatePassword();
+            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(email, encodePassword, clientName, true, false, Arrays.asList(new SimpleGrantedAuthority(Role.ROLE_USER.name())));
             memberLoadUserDto.setProps(attributes);
 
             return memberLoadUserDto;
@@ -152,7 +86,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         else{
             Member member = memberRepository.findByMemberId(email).get();
 
-            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(member.getMemberId(), member.getPassword(), member.getSocial(), Arrays.asList(new SimpleGrantedAuthority(member.getRole().name())));
+            MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(member.getMemberId(), member.getPassword(), clientName, member.getSocial(), true, Arrays.asList(new SimpleGrantedAuthority(member.getRole().name())));
 
             return memberLoadUserDto;
         }
