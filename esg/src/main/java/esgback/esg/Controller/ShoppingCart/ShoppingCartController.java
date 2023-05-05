@@ -1,8 +1,8 @@
 package esgback.esg.Controller.ShoppingCart;
 
-import esgback.esg.DTO.Item.ItemDto;
 import esgback.esg.DTO.Response;
-import esgback.esg.DTO.ShoppingCartRequestDto;
+import esgback.esg.DTO.ShoppingCart.ShoppingCartListedItemDto;
+import esgback.esg.DTO.ShoppingCart.ShoppingCartRequestDto;
 import esgback.esg.Service.ShoppingCart.ShoppingCartService;
 import esgback.esg.Util.JWTUtil;
 import jakarta.persistence.NoResultException;
@@ -21,8 +21,8 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
     private final JWTUtil jwtUtil;
 
-    @PostMapping("/main/item/{item_id}/cart")
-    public ResponseEntity<?> addCart(@RequestHeader("authorization") String authorization, @RequestBody ShoppingCartRequestDto shoppingCartRequestDto, @PathVariable("item_id") Long itemId) {
+    @PostMapping("/main/item/cart")
+    public ResponseEntity<?> addCart(@RequestHeader("authorization") String authorization, @RequestBody ShoppingCartRequestDto shoppingCartRequestDto) {
         try {
             String token = authorization.substring(7);
 
@@ -46,13 +46,12 @@ public class ShoppingCartController {
         String memberId = String.valueOf(stringObjectMap.get("id"));
 
         try {
-            List<ItemDto> itemDtos = shoppingCartService.getShoppingCartItems(memberId);
+            List<ShoppingCartListedItemDto> itemDtos = shoppingCartService.getShoppingCartItems(memberId);
 
             return response.success(itemDtos);
         } catch (NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
     }
 
     @PostMapping("/main/cart/reserve")
@@ -65,7 +64,23 @@ public class ShoppingCartController {
 
             shoppingCartService.reserve(memberId);
             return response.success("장바구니 예약 완료");
-        } catch (NoResultException e) {
+        } catch (IllegalArgumentException | NoResultException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/main/cart/delete/{index_num}")
+    public ResponseEntity<?> detete(@RequestHeader("authorization") String authorization, @PathVariable("index_num") Long index) {
+        try {
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String memberId = String.valueOf(stringObjectMap.get("id"));
+
+            shoppingCartService.delete(memberId, index);
+
+            return response.success("삭제 완료");
+        } catch (IllegalArgumentException | NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
