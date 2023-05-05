@@ -1,6 +1,6 @@
 package esgback.esg.Domain.ShoppingCart;
 
-import esgback.esg.Domain.Enum.State;
+import esgback.esg.Domain.Enum.ReserveState;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +18,7 @@ public class ShoppingCartReserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private State reservedState;
+    private ReserveState reservedState;
 
     private LocalDateTime reserveDate;
 

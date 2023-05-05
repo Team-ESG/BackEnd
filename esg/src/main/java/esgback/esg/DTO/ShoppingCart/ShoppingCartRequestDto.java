@@ -1,4 +1,4 @@
-package esgback.esg.DTO;
+package esgback.esg.DTO.ShoppingCart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
