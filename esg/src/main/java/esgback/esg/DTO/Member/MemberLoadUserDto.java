@@ -1,5 +1,6 @@
 package esgback.esg.DTO.Member;
 
+import esgback.esg.Domain.Enum.Sex;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,14 +17,20 @@ public class MemberLoadUserDto extends User implements OAuth2User {
 
     private String id;
     private String pwd;
-    private Map<String, Object> props;//소셜 로그인 정보
-    private Boolean social;
 
-    public MemberLoadUserDto(String username, String pwd, Boolean social, Collection<GrantedAuthority> authorities) {
+    private Map<String, Object> props;//소셜 로그인 정보
+
+    private String provider;
+    private Boolean social;
+    private Boolean success;
+
+    public MemberLoadUserDto(String username, String pwd, String provider, Boolean social, Boolean success, Collection<GrantedAuthority> authorities) {
         super(username, pwd, authorities);
         this.id = username;
         this.pwd = pwd;
+        this.provider = provider;
         this.social = social;//social 로그인이면서 회원 db에 없으면 계정 새로 파야됨
+        this.success = success;
     }
 
     @Override
