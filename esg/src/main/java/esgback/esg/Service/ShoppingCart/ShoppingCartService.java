@@ -1,20 +1,22 @@
 package esgback.esg.Service.ShoppingCart;
 
+import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.ShoppingCart.ShoppingCartListedItemDto;
 import esgback.esg.DTO.ShoppingCart.ShoppingCartRequestDto;
-import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Enum.State;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.ShoppingCart.ShoppingCart;
 import esgback.esg.Domain.ShoppingCart.ShoppingCartListedItem;
-import esgback.esg.Domain.ShoppingCart.ShoppingCartReserve;
-import esgback.esg.Repository.*;
+import esgback.esg.Repository.ItemRepository;
+import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Repository.ShoppingCartListedItemRepository;
+import esgback.esg.Repository.ShoppingCartRepository;
 import esgback.esg.Service.Item.ItemService;
+import esgback.esg.Service.Reserve.ReserveService;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,7 +32,7 @@ public class ShoppingCartService {
     private final ItemRepository itemRepository;
     private final ShoppingCartListedItemRepository shoppingCartListedItemRepository;
     private final ItemService itemService;
-    private final ShoppingCartReserveRepository shoppingCartReserveRepository;
+    private final ReserveService reserveService;
 
     public void addCart(String memberId, ShoppingCartRequestDto shoppingCartRequestDto) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
@@ -94,35 +96,11 @@ public class ShoppingCartService {
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItems) {
             Item item = shoppingCartListedItem.getItem();
+            WantReserveDto wantReserveDto = new WantReserveDto(item.getId(), LocalDateTime.now(), shoppingCartListedItem.getShoppingCartListedItemQuantity());
+
             itemService.reserve(item, shoppingCartListedItem.getShoppingCartListedItemQuantity());
-        }
-
-        ShoppingCartReserve shoppingCartReserve = ShoppingCartReserve.builder()
-                .reservedState(ReserveState.RESERVED)
-                .reserveDate(LocalDateTime.now())
-                .shoppingCart(shoppingCart)
-                .build();
-
-        shoppingCartReserveRepository.save(shoppingCartReserve);
-    }
-
-    @Scheduled(fixedRate = 10000)
-    public void updateReserveStates() {
-        // 장바구니 모든 상품이 예약 성공 시 Success로 변경 기능 추가
-        // 상품 각각 예약 하도록 기능 추가
-        LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
-        List<ShoppingCartReserve> failedReserveList = shoppingCartReserveRepository.findByReservedStateAndReserveDateBefore(ReserveState.RESERVED, thirtyMinutesAgo);
-
-        for (ShoppingCartReserve reserve : failedReserveList) {
-            reserve.setReservedState(ReserveState.RESERVE_FAIL);
-            shoppingCartReserveRepository.save(reserve);
-
-            for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(reserve.getShoppingCart().getId())) {
-                Item item = shoppingCartListedItem.getItem();
-                int quantity = shoppingCartListedItem.getShoppingCartListedItemQuantity();
-                item.setReservedQuantity(item.getReservedQuantity() - quantity);
-                item.setItemQuantity(item.getItemQuantity() + quantity);
-            }
+            reserveService.reserve(wantReserveDto, memberId, item.getId());
+            shoppingCartListedItemRepository.save(shoppingCartListedItem);
         }
     }
 
