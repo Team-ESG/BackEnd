@@ -30,6 +30,8 @@ public class CustomUserDetailService implements UserDetailsService {
         MemberLoadUserDto memberLoadUserDto = new MemberLoadUserDto(
                 member.getMemberId(),
                 member.getPassword(),
+                "nothing",
+                false,
                 true,
                 List.of(new SimpleGrantedAuthority(member.getRole().name())
                 ));
