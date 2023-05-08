@@ -49,13 +49,20 @@ public class MemberInfoService {
     public String checkResetPwdAvailable(PwdCodeRequestDto pwdCodeRequestDto) {//비밀번호 찾기 전 회원정보 존재 여부
         Optional<Member> find = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
 
-        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
 
-        if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
+        if (!oldMember.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
             throw new IllegalArgumentException("유저 정보의 휴대폰 번호와 일치하지 않습니다.");
         }
 
-        return generatePassword();
+        String newPwd = generatePassword();
+        String encodeNewPwd = passwordEncoder.encode(newPwd);
+
+        Member newMember = Member.updatePwd(oldMember, encodeNewPwd);
+
+        memberRepository.save(newMember);
+
+        return newPwd;
     }
 
     public String testCode(CodeRequestDto codeRequestDto) {
