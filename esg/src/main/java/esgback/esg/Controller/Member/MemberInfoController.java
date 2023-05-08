@@ -38,9 +38,9 @@ public class MemberInfoController {
     public ResponseEntity<?> checkResetPwdAvailable(@RequestBody PwdCodeRequestDto pwdCodeRequestDto) {
 
         try {
-            memberInfoService.checkResetPwdAvailable(pwdCodeRequestDto);
+            String newPwd = memberInfoService.checkResetPwdAvailable(pwdCodeRequestDto);
 
-            return response.success("회원 검증 완료");
+            return response.success(newPwd, "need to change new password", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
