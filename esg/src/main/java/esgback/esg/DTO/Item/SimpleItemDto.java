@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A DTO for the {@link esgback.esg.Domain.Item.Item} entity
@@ -17,4 +18,5 @@ public class SimpleItemDto implements Serializable {
     private final String photoUrl;
     private final int discountPrice;
     private final int originalPrice;
+    private final Date expirationDate;
 }

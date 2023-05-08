@@ -23,7 +23,7 @@ public class ItemController {
     @GetMapping("/main/list")
     public ResponseEntity<?> showItemList() {
         List<SimpleItemDto> items = itemService.showItemList().stream()
-                .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice()))
+                .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice(), item.getExpirationDate()))
                 .toList();
 
         if (items.isEmpty()) return response.fail("상품 목록이 존재하지 않습니다.", HttpStatus.NO_CONTENT);

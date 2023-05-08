@@ -1,6 +1,6 @@
 package esgback.esg.DTO.Item;
 
-import esgback.esg.Domain.Market.Market;
+import esgback.esg.Domain.Member.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -23,4 +23,5 @@ public class ItemDto implements Serializable {
     private final Date registerDate;
     private final int itemQuantity;
     private final int wishedItemAddedCount;
+    private final Address address;
 }
