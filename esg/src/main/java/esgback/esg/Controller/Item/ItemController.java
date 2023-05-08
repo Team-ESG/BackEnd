@@ -1,8 +1,8 @@
 package esgback.esg.Controller.Item;
 
 import esgback.esg.DTO.Item.ItemDto;
-import esgback.esg.DTO.Response;
 import esgback.esg.DTO.Item.SimpleItemDto;
+import esgback.esg.DTO.Response;
 import esgback.esg.Service.Item.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class ItemController {
     @GetMapping("/main/list")
     public ResponseEntity<?> showItemList() {
         List<SimpleItemDto> items = itemService.showItemList().stream()
-                .map(item -> new SimpleItemDto(item.getMarket().getOwnerName(), item.getName(), item.getPhotoUrl()))
+                .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice()))
                 .toList();
 
         if (items.isEmpty()) return response.fail("상품 목록이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
