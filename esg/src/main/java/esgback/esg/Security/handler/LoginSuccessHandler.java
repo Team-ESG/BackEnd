@@ -1,9 +1,11 @@
 package esgback.esg.Security.handler;
 
 import com.google.gson.Gson;
+import esgback.esg.DTO.Market.SimpleMarketDto;
 import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Service.Wish.WishService;
 import esgback.esg.Util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +29,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
+    private final WishService wishService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -35,6 +39,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Optional<Member> find = memberRepository.findByMemberId(authentication.getName());
         Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
         String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
+        List<SimpleMarketDto> wishList = wishService.wishList(member.getMemberId());
 
         MemberReturnDto memberReturnDto = MemberReturnDto.builder()
                 .memberId(member.getMemberId())
@@ -45,6 +50,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .birthDate(member.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .sex(member.getSex())
                 .discountPrice(member.getDiscountPrice())
+                .wishList(wishList)
                 .social(member.getSocial())
                 .build();
 
