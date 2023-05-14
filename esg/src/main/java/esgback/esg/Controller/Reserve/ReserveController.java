@@ -62,7 +62,7 @@ public class ReserveController {
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
-                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
+                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getItem().getMarket().getId(), reserve.getItem().getMarket().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
                     .collect(Collectors.toList());
 
             return response.success(simpleReserveDtoList);
