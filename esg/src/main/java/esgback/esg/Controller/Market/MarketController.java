@@ -3,12 +3,16 @@ package esgback.esg.Controller.Market;
 import esgback.esg.DTO.Market.MarketDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Service.Market.MarketService;
+import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 
 @RestController
@@ -16,11 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class MarketController {
     private final MarketService marketService;
     private final Response response;
+    private final JWTUtil jwtUtil;
 
     @GetMapping("/market/{market_id}")
-    public ResponseEntity<?> showMarketDetail(@PathVariable("market_id") Long id) {
+    public ResponseEntity<?> showMarketDetail(@RequestHeader("authorization") String authorization, @PathVariable("market_id") Long id) {
         try {
-            MarketDto marketDto = marketService.searchById(id);
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String memberId = String.valueOf(stringObjectMap.get("id"));
+
+            MarketDto marketDto = marketService.searchById(memberId, id);
 
             return response.success(marketDto);
         } catch (IllegalArgumentException e) {
