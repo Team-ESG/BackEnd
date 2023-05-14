@@ -27,7 +27,7 @@ public class SearchService {
         if (marketList.isEmpty()) throw new NoResultException("검색 결과가 없습니다.");
         else {
             List<SimpleMarketDto> result = marketList.stream()
-                    .map(market -> new SimpleMarketDto(market.getId(), market.getName(), market.getPhotoUrl()))
+                    .map(market -> new SimpleMarketDto(market.getId(), market.getName(), market.getPhotoUrl(), market.getAddress()))
                     .toList();
             return result;
         }

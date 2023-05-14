@@ -40,7 +40,7 @@ public class WishService {
         List<SimpleMarketDto> result = new ArrayList<>();
 
         for (Wish wish : wishList) {
-            result.add(new SimpleMarketDto(wish.getMarket().getId(), wish.getMarket().getName(), wish.getMarket().getPhotoUrl()));
+            result.add(new SimpleMarketDto(wish.getMarket().getId(), wish.getMarket().getName(), wish.getMarket().getPhotoUrl(), wish.getMarket().getAddress()));
         }
 
         return result;

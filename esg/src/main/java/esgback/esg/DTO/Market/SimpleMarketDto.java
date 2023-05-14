@@ -1,5 +1,6 @@
 package esgback.esg.DTO.Market;
 
+import esgback.esg.Domain.Member.Address;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,4 +13,5 @@ public class SimpleMarketDto implements Serializable {
     private final Long marketId;
     private final String name;
     private final String photoUrl;
+    private final Address address;
 }
