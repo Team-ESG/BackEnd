@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * A DTO for the {@link esgback.esg.Domain.Reserve.Reserve} entity
@@ -17,6 +16,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class WantReserveDto implements Serializable {
     private Long itemId;
-    private LocalDateTime reserveDate;
     private int quantity;
 }

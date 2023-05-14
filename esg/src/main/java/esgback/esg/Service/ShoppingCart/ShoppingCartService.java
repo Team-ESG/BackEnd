@@ -19,7 +19,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +95,7 @@ public class ShoppingCartService {
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItems) {
             Item item = shoppingCartListedItem.getItem();
-            WantReserveDto wantReserveDto = new WantReserveDto(item.getId(), LocalDateTime.now(), shoppingCartListedItem.getShoppingCartListedItemQuantity());
+            WantReserveDto wantReserveDto = new WantReserveDto(item.getId(), shoppingCartListedItem.getShoppingCartListedItemQuantity());
 
             itemService.reserve(item, shoppingCartListedItem.getShoppingCartListedItemQuantity());
             reserveService.reserve(wantReserveDto, memberId, item.getId());
