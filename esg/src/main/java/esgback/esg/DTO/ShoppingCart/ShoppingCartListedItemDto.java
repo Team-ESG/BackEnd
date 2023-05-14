@@ -19,6 +19,7 @@ public class ShoppingCartListedItemDto implements Serializable {
     private final String name;
     private final int originalPrice;
     private final int discountPrice;
+    private final int itemQuantity;
     private final int shoppingCartListedItemQuantity;
     private final int totalPrice;
     private final State isSold;
@@ -31,6 +32,7 @@ public class ShoppingCartListedItemDto implements Serializable {
         this.name = item.getName();
         this.originalPrice = item.getOriginalPrice();
         this.discountPrice = item.getDiscountPrice();
+        this.itemQuantity = item.getItemQuantity();
         this.shoppingCartListedItemQuantity = shoppingCartListedItem.getShoppingCartListedItemQuantity();
         this.totalPrice = shoppingCartListedItem.getTotalPrice();
         this.isSold = isSold;
