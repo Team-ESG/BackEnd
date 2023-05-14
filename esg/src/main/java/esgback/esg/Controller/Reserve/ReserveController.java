@@ -28,15 +28,15 @@ public class ReserveController {
     private final MemberInfoService memberInfoService;
     private final JWTUtil jwtUtil;
 
-    @PostMapping("/main/item/{item_id}/reserve")
-    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @RequestHeader("authorization") String authorization, @PathVariable("item_id") Long itemId) {
+    @PostMapping("/main/item/reserve")
+    public ResponseEntity<?> makeReserve(@Validated @RequestBody WantReserveDto wantReserveDto, @RequestHeader("authorization") String authorization) {
         try {
             String token = authorization.substring(7);
 
             Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
             String memberId = String.valueOf(stringObjectMap.get("id"));
 
-            Reserve updateReserve = reserveService.reserve(wantReserveDto, memberId, itemId);
+            Reserve updateReserve = reserveService.reserve(wantReserveDto, memberId, wantReserveDto.getItemId());
 
             SuccessReserveDto successReserveDto = SuccessReserveDto.builder()
                     .reserveDate(updateReserve.getReserveDate())
