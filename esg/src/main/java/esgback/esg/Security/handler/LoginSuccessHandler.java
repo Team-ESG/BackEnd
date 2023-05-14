@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -33,14 +34,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         Optional<Member> find = memberRepository.findByMemberId(authentication.getName());
         Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+        String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
 
         MemberReturnDto memberReturnDto = MemberReturnDto.builder()
                 .memberId(member.getMemberId())
                 .name(member.getName())
                 .nickName(member.getNickName())
+                .phoneNumber(phoneNumber)
                 .address(member.getAddress())
+                .birthDate(member.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .sex(member.getSex())
                 .discountPrice(member.getDiscountPrice())
+                .social(member.getSocial())
                 .build();
 
         Map<String, Object> claim = Map.of("id", authentication.getName());
