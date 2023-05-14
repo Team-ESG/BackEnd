@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -45,14 +46,23 @@ public class MemberInfoService {
         return id;
     }
 
-    public void checkResetPwdAvailable(PwdCodeRequestDto pwdCodeRequestDto) {//비밀번호 찾기 전 회원정보 존재 여부
+    public String checkResetPwdAvailable(PwdCodeRequestDto pwdCodeRequestDto) {//비밀번호 찾기 전 회원정보 존재 여부
         Optional<Member> find = memberRepository.findByMemberId(pwdCodeRequestDto.getId());
 
-        Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+        Member oldMember = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
 
-        if (!member.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
+        if (!oldMember.getPhoneNumber().equals(pwdCodeRequestDto.getPhone())) {
             throw new IllegalArgumentException("유저 정보의 휴대폰 번호와 일치하지 않습니다.");
         }
+
+        String newPwd = generatePassword();
+        String encodeNewPwd = passwordEncoder.encode(newPwd);
+
+        Member newMember = Member.updatePwd(oldMember, encodeNewPwd);
+
+        memberRepository.save(newMember);
+
+        return newPwd;
     }
 
     public String testCode(CodeRequestDto codeRequestDto) {
@@ -144,5 +154,21 @@ public class MemberInfoService {
 
 
         return memberReturnDto;
+    }
+
+    public String generatePassword() {
+        String[] specialChar = new String[]{"!", "@", "#", "$", "%", "^", "&", "&", "(", ")"};
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 7; i++) {
+            password.append(random.nextInt(10));
+        }
+
+        for (int i = 0; i < 2; i++) {
+            password.append(specialChar[random.nextInt(10)]);
+        }
+
+        return String.valueOf(password);
     }
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -23,7 +24,7 @@ public class Item {
     private Market market;
 
     private String name;
-    private Date expirationDate;
+    private LocalDateTime expirationDate;
     private String photoUrl;
     private String itemDetail;
     private int originalPrice;

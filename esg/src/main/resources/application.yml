@@ -56,3 +56,13 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      force-response: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8

@@ -26,7 +26,7 @@ public class ShoppingCartListedItem {
 
     private int shoppingCartListedItemQuantity;
     private int totalPrice;
-
+    private Long index;
 
     public static ShoppingCartListedItem createShoppingCartListedItem(ShoppingCart shoppingCart, Item item, int shoppingCartListedItemQuantity) {
         ShoppingCartListedItem shoppingCartListedItem = new ShoppingCartListedItem();

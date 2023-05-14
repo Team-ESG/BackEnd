@@ -38,8 +38,8 @@ public class ReserveService {
         Reserve updateReserve = Reserve.builder()
                 .member(member)
                 .item(item)
-                .reserveDate(wantReserveDto.getReserveDate())
-                .reserveEndDate(wantReserveDto.getReserveDate().plusMinutes(30))
+                .reserveDate(LocalDateTime.now())
+                .reserveEndDate(LocalDateTime.now().plusMinutes(30))
                 .reserveState(ReserveState.RESERVED)
                 .quantity(wantReserveDto.getQuantity())
                 .price(wantReserveDto.getQuantity() * item.getDiscountPrice())
@@ -51,11 +51,11 @@ public class ReserveService {
         return updateReserve;
     }
 
-    public List<Reserve> findByMemberId(String memberId) {
+    public List<Reserve> findByMemberId(String memberId) throws Exception {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         List<Reserve> reserveList = reserveRepository.findByMemberId(member.getId());
 
-        if (reserveList.isEmpty()) throw new IllegalArgumentException("예약 내역이 없습니다.");
+        if (reserveList.isEmpty()) throw new Exception("예약 내역이 없습니다.");
 
         return reserveList;
     }
