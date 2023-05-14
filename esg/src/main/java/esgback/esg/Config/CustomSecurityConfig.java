@@ -92,7 +92,7 @@ public class CustomSecurityConfig{
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        http.addFilterBefore(new AutoLoginCheckFilter("/autoLogin", jwtUtil, redisTemplate, memberRepository), TokenCheckFilter.class);//refreshTokenCheckFilter
+        http.addFilterBefore(new AutoLoginCheckFilter("/autoLogin", jwtUtil, redisTemplate, memberRepository, wishService), TokenCheckFilter.class);//refreshTokenCheckFilter
 
         http.csrf().disable();//csrf 토큰 비활성화
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//세션 사용 안함

@@ -1,10 +1,12 @@
 package esgback.esg.Security.Filter;
 
 import com.google.gson.Gson;
+import esgback.esg.DTO.Market.SimpleMarketDto;
 import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Exception.RefreshTokenException;
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Service.Wish.WishService;
 import esgback.esg.Util.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -21,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +37,7 @@ public class AutoLoginCheckFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
+    private final WishService wishService;
 
 
     @Override
@@ -135,14 +140,20 @@ public class AutoLoginCheckFilter extends OncePerRequestFilter {
 
         Optional<Member> find = memberRepository.findByMemberId(id);
         Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+        String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
+        List<SimpleMarketDto> wishList = wishService.wishList(member.getMemberId());
 
         MemberReturnDto memberReturnDto = MemberReturnDto.builder()
                 .memberId(member.getMemberId())
                 .name(member.getName())
                 .nickName(member.getNickName())
+                .phoneNumber(phoneNumber)
                 .address(member.getAddress())
+                .birthDate(member.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .sex(member.getSex())
                 .discountPrice(member.getDiscountPrice())
+                .wishList(wishList)
+                .social(member.getSocial())
                 .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
