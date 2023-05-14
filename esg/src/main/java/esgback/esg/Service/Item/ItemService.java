@@ -23,7 +23,7 @@ public class ItemService {
     public ItemDto searchById(Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
 
-        return new ItemDto(item.getMarket().getOwnerName(), item.getName(), item.getExpirationDate(), item.getPhotoUrl(), item.getItemDetail(), item.getOriginalPrice(), item.getDiscountPrice(), item.getRegisterDate(), item.getItemQuantity(), item.getWishedItemAddedCount());
+        return new ItemDto(item.getId(), item.getMarket().getOwnerName(), item.getName(), item.getExpirationDate(), item.getPhotoUrl(), item.getItemDetail(), item.getOriginalPrice(), item.getDiscountPrice(), item.getRegisterDate(), item.getItemQuantity(), item.getWishedItemAddedCount());
     }
 
     public void reserve(Item item, int quantity) {

@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 public class ItemDto implements Serializable {
+    private final Long itemId;
     private final String marketName;
     private final String name;
     private final LocalDateTime expirationDate;
