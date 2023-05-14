@@ -1,5 +1,6 @@
 package esgback.esg.DTO.Member;
 
+import esgback.esg.DTO.Market.SimpleMarketDto;
 import esgback.esg.Domain.Enum.Sex;
 import esgback.esg.Domain.Member.Address;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -21,11 +23,12 @@ public class MemberReturnDto {
     private int discountPrice;
 
     private String birthDate;
+    private List<SimpleMarketDto> wishList;
 
     private Boolean social;
 
     @Builder
-    public MemberReturnDto(String memberId, String name, String nickName, String phoneNumber, Address address, String birthDate, Sex sex, int discountPrice, Boolean social) {
+    public MemberReturnDto(String memberId, String name, String nickName, String phoneNumber, Address address, String birthDate, Sex sex, int discountPrice, List<SimpleMarketDto> wishList, Boolean social) {
         this.memberId = memberId;
         this.name = name;
         this.nickName = nickName;
@@ -34,6 +37,7 @@ public class MemberReturnDto {
         this.birthDate = birthDate;
         this.sex = sex;
         this.discountPrice = discountPrice;
+        this.wishList = wishList;
         this.social = social;
     }
 }
