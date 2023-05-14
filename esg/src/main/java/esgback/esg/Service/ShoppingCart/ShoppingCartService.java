@@ -51,14 +51,12 @@ public class ShoppingCartService {
             shoppingCartListedItem.setIndex(shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId()).size() + 1L);
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         } else {
-            shoppingCartListedItem.setShoppingCartListedItemQuantity(shoppingCartListedItem.getShoppingCartListedItemQuantity() + shoppingCartRequestDto.getQuantity());
+            shoppingCartListedItem.setShoppingCartListedItemQuantity(shoppingCartRequestDto.getQuantity());
             shoppingCartListedItem.setTotalPrice(shoppingCartListedItem.getShoppingCartListedItemQuantity() * shoppingCartListedItem.getItem().getDiscountPrice());
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         }
 
-        shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + shoppingCartListedItem.getTotalPrice());
         int totalPrice = 0;
-
         for (ShoppingCartListedItem s : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
             totalPrice += s.getTotalPrice();
         }
