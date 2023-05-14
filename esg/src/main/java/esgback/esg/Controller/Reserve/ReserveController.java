@@ -68,6 +68,8 @@ public class ReserveController {
             return response.success(simpleReserveDtoList);
         } catch (IllegalArgumentException | NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return response.success(e.getMessage());
         }
     }
 

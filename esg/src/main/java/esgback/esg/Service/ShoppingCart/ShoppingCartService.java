@@ -68,9 +68,9 @@ public class ShoppingCartService {
         shoppingCartRepository.save(shoppingCart);
     }
 
-    public List<ShoppingCartListedItemDto> getShoppingCartItems(String memberId) {
+    public List<ShoppingCartListedItemDto> getShoppingCartItems(String memberId) throws Exception {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
-        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new NoResultException("장바구니 목록이 존재하지 않습니다."));
+        ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new Exception("장바구니 내역이 없음"));
         List<ShoppingCartListedItemDto> result = new ArrayList<>();
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {

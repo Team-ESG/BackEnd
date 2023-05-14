@@ -51,6 +51,8 @@ public class ShoppingCartController {
             return response.success(itemDtos);
         } catch (NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return response.success("장바구니 내역이 존재하지 않습니다.");
         }
     }
 
