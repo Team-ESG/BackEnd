@@ -1,10 +1,14 @@
 package esgback.esg.Security.handler;
 
 import com.google.gson.Gson;
+import esgback.esg.DTO.Market.SimpleMarketDto;
 import esgback.esg.DTO.Member.MemberLoadUserDto;
+import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.DTO.Member.MemberSocialJoinDto;
 import esgback.esg.Domain.Enum.Sex;
+import esgback.esg.Domain.Member.Member;
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Service.Wish.WishService;
 import esgback.esg.Util.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,13 +18,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -29,8 +35,8 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
-
     private final MemberRepository memberRepository;
+    private final WishService wishService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -56,14 +62,31 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
             response.getWriter().println(tokenInfoJson);
         }
         else{
+            Optional<Member> find = memberRepository.findByMemberId(authentication.getName());
+            Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
+            String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
+            List<SimpleMarketDto> wishList = wishService.wishList(member.getMemberId());
+
+            MemberReturnDto memberReturnDto = MemberReturnDto.builder()
+                    .memberId(member.getMemberId())
+                    .name(member.getName())
+                    .nickName(member.getNickName())
+                    .phoneNumber(phoneNumber)
+                    .address(member.getAddress())
+                    .birthDate(member.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    .sex(member.getSex())
+                    .discountPrice(member.getDiscountPrice())
+                    .wishList(wishList)
+                    .social(member.getSocial())
+                    .build();
+
             String accessToken = jwtUtil.generateToken(claim, 1);//유효기간 1일
             String refreshToken = jwtUtil.generateToken(claim, 3);//유효기간 30일 - //test 때는 3분으로
 
-            Map<String, String> tokenInfo = Map.of("accessToken", accessToken, "refreshToken", refreshToken, "data" , "pass");
+            String sendData = gson.toJson(Map.of("info", memberReturnDto, "accessToken", accessToken, "refreshToken", refreshToken));
             redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
 
-            String tokenInfoJson = gson.toJson(tokenInfo);
-            response.getWriter().println(tokenInfoJson);
+            response.getWriter().println(sendData);
         }
     }
 
