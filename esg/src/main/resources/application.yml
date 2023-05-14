@@ -63,3 +63,6 @@ server:
       charset: UTF-8
       force: true
       force-response: true
+      enabled: true
+  tomcat:
+    uri-encoding: UTF-8

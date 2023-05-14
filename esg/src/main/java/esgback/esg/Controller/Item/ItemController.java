@@ -26,7 +26,7 @@ public class ItemController {
                 .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice()))
                 .toList();
 
-        if (items.isEmpty()) return response.fail("상품 목록이 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+        if (items.isEmpty()) return response.success("상품 목록이 존재하지 않습니다.");
         return response.success(items);
     }
 

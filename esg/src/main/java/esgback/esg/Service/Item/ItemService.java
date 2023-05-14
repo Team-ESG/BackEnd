@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,7 +17,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     public List<Item> showItemList() {
-        return itemRepository.findAll();
+        return itemRepository.findByExpirationDateAfter(LocalDateTime.now());
     }
 
     public ItemDto searchById(Long itemId) {
