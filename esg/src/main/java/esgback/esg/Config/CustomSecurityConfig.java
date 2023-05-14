@@ -1,12 +1,14 @@
 package esgback.esg.Config;
 
 import esgback.esg.Repository.MemberRepository;
+import esgback.esg.Repository.WishRepository;
 import esgback.esg.Security.Filter.LoginFilter;
 import esgback.esg.Security.Filter.TokenCheckFilter;
 import esgback.esg.Security.Filter.AutoLoginCheckFilter;
 import esgback.esg.Security.CustomUserDetailService;
 import esgback.esg.Security.handler.LoginSuccessHandler;
 import esgback.esg.Security.handler.SocialLoginSuccessHandler;
+import esgback.esg.Service.Wish.WishService;
 import esgback.esg.Util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -37,6 +39,7 @@ public class CustomSecurityConfig{
     private final CustomUserDetailService customUserDetailService;
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final WishService wishService;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
@@ -76,9 +79,9 @@ public class CustomSecurityConfig{
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
 
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository);
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository, wishService);
 
-        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate, memberRepository);
+        SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate, memberRepository, wishService);
 
         loginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
 
