@@ -1,5 +1,6 @@
 package esgback.esg.DTO.Item;
 
+import esgback.esg.Domain.Member.Address;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class ItemDto implements Serializable {
     private final Long itemId;
+    private final Long marketId;
     private final String marketName;
     private final String name;
     private final LocalDateTime expirationDate;
@@ -24,4 +26,5 @@ public class ItemDto implements Serializable {
     private final Date registerDate;
     private final int itemQuantity;
     private final int wishedItemAddedCount;
+    private final Address address;
 }
