@@ -87,11 +87,16 @@ public class ReserveController {
     }
 
     @PostMapping("/main/reserveList/{reserve_id}/complete")
-    public ResponseEntity<?> completeReserve(@PathVariable("reserve_id") Long reserveId) {
+    public ResponseEntity<?> completeReserve(@RequestHeader("authorization") String authorization, @PathVariable("reserve_id") Long reserveId) {
         try {
             Reserve reserve = reserveService.findById(reserveId);
 
-            reserveService.completeReserve(reserveId);
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String memberId = String.valueOf(stringObjectMap.get("id"));
+
+            reserveService.completeReserve(memberId, reserveId);
             return response.success("구매 성공");
         } catch (NoResultException e) {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
