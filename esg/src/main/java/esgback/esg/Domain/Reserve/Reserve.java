@@ -31,6 +31,8 @@ public class Reserve {
     private LocalDateTime reserveDate;
     private LocalDateTime reserveEndDate;
     @Setter
+    private LocalDateTime pickUpDate;
+    @Setter
     @Enumerated(value = EnumType.STRING)
     private ReserveState reserveState;
 
@@ -43,6 +45,7 @@ public class Reserve {
         this.item = item;
         this.reserveDate = reserveDate;
         this.reserveEndDate = reserveEndDate;
+        this.pickUpDate = null;
         this.reserveState = reserveState;
         this.quantity = quantity;
         this.price = price;

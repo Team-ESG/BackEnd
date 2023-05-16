@@ -78,7 +78,7 @@ public class ReserveController {
         try {
             Reserve reserve = reserveService.findById(reserveId);
 
-            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getItem().getName(), reserve.getReserveDate(), reserve.getReserveEndDate(), reserve.getReserveState(), reserve.getQuantity(), reserve.getPrice());
+            ReserveDetailDto reserveDetailDto = new ReserveDetailDto(reserve.getId(), reserve.getItem().getMarket().getId(), reserve.getItem().getName(), reserve.getItem().getMarket().getName(), reserve.getItem().getMarket().getPhoneNumber(), reserve.getReserveDate(), reserve.getPickUpDate(), reserve.getReserveState(), reserve.getQuantity(), reserve.getPrice());
 
             return response.success(reserveDetailDto);
         } catch (NoResultException e) {
