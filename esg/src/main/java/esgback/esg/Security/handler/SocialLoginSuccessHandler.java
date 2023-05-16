@@ -54,8 +54,7 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
             String accessToken = jwtUtil.generateToken(claim, 1);//유효기간 1일
             String refreshToken = jwtUtil.generateToken(claim, 3);//유효기간 30일 - //test 때는 3분으로
 
-            String data = gson.toJson(memberSocialJoinDto);
-            Map<String, String> tokenInfo = Map.of("accessToken", accessToken, "refreshToken", refreshToken, "data", data);
+            Map<String, Object> tokenInfo = Map.of("accessToken", accessToken, "refreshToken", refreshToken, "data", memberSocialJoinDto);
             redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
             String tokenInfoJson = gson.toJson(tokenInfo);
 
