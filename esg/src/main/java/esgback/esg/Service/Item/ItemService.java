@@ -17,7 +17,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     public List<Item> showItemList() {
-        return itemRepository.findByExpirationDateAfter(LocalDateTime.now());
+        return itemRepository.findByExpirationDateAfterAndItemQuantityGreaterThan(LocalDateTime.now(), 0);
     }
 
     public ItemDto searchById(Long itemId) {

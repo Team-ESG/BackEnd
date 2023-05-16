@@ -9,5 +9,5 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByNameContaining(String keyword);
 
-    List<Item> findByExpirationDateAfter(LocalDateTime dateTime);
+    List<Item> findByExpirationDateAfterAndItemQuantityGreaterThan(LocalDateTime dateTime, int quantity);
 }
