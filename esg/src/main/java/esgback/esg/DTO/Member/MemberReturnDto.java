@@ -23,12 +23,12 @@ public class MemberReturnDto {
     private int discountPrice;
 
     private String birthDate;
-    private List<SimpleMarketDto> wishList;
+    private long[] wishList;
 
     private Boolean social;
 
     @Builder
-    public MemberReturnDto(String memberId, String name, String nickName, String phoneNumber, Address address, String birthDate, Sex sex, int discountPrice, List<SimpleMarketDto> wishList, Boolean social) {
+    public MemberReturnDto(String memberId, String name, String nickName, String phoneNumber, Address address, String birthDate, Sex sex, int discountPrice, long[] wishList, Boolean social) {
         this.memberId = memberId;
         this.name = name;
         this.nickName = nickName;

@@ -66,6 +66,13 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
             Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
             String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
             List<SimpleMarketDto> wishList = wishService.wishList(member.getMemberId());
+            long[] wishArr = new long[wishList.size()];
+            int cnt = 0;
+
+            for (SimpleMarketDto temp : wishList){
+                wishArr[cnt] = temp.getMarketId();
+                cnt++;
+            }
 
             MemberReturnDto memberReturnDto = MemberReturnDto.builder()
                     .memberId(member.getMemberId())
@@ -76,7 +83,7 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
                     .birthDate(member.getBirthDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .sex(member.getSex())
                     .discountPrice(member.getDiscountPrice())
-                    .wishList(wishList)
+                    .wishList(wishArr)
                     .social(member.getSocial())
                     .build();
 
