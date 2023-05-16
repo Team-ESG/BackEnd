@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -29,12 +30,13 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Sex sex;
     private LocalDate birthDate;
+    @Setter
     private int discountPrice = 0;
     private String phoneNumber;
     private Boolean social;
 
     @Builder
-    public Member(Long id, String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, int discountPrice, String phoneNumber, Boolean social){
+    public Member(Long id, String memberId, String password, String name, String nickName, Role role, Address address, Sex sex, LocalDate birthDate, int discountPrice, String phoneNumber, Boolean social) {
         this.id = id;
         this.memberId = memberId;
         this.password = password;

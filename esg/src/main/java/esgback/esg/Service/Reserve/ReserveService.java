@@ -80,7 +80,8 @@ public class ReserveService {
         }
     }
 
-    public void completeReserve(Long reserveId) {
+    public void completeReserve(String memberId, Long reserveId) {
+        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Reserve reserve = findById(reserveId);
 
         reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
@@ -90,5 +91,7 @@ public class ReserveService {
         Item item = reserve.getItem();
         item.setReservedQuantity(item.getReservedQuantity() - reserve.getQuantity());
         itemRepository.save(item);
+
+        member.setDiscountPrice(member.getDiscountPrice() + reserve.getQuantity() * (item.getOriginalPrice() - item.getDiscountPrice()));
     }
 }
