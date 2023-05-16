@@ -84,6 +84,7 @@ public class ReserveService {
         Reserve reserve = findById(reserveId);
 
         reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
+        reserve.setPickUpDate(LocalDateTime.now());
         reserveRepository.save(reserve);
 
         Item item = reserve.getItem();

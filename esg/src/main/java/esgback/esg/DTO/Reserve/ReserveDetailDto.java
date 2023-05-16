@@ -14,9 +14,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReserveDetailDto implements Serializable {
     private final Long id;
+    private final Long marketId;
     private final String itemName;
+    private final String marketName;
+    private final String marketPhoneNumber;
     private final LocalDateTime reserveDate;
-    private final LocalDateTime reserveEndDate;
+    private final LocalDateTime pickUpDate;
     private final ReserveState reserveState;
     private final int quantity;
     private final int price;
