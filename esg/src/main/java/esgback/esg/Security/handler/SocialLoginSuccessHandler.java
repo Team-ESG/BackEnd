@@ -98,7 +98,7 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
         String nickName = null;
         Sex sex = null;
 
-        if(memberLoadUserDto.getProvider().equals("Kakao")){
+        if(memberLoadUserDto.getProvider().equals("kakao")){
             Object kakao_account = props.get("kakao_account");
             LinkedHashMap orderedData = (LinkedHashMap) kakao_account;
 
