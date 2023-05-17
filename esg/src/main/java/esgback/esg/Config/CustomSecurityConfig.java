@@ -1,5 +1,6 @@
 package esgback.esg.Config;
 
+import esgback.esg.Repository.MarketRepository;
 import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Repository.WishRepository;
 import esgback.esg.Security.Filter.LoginFilter;
@@ -39,6 +40,7 @@ public class CustomSecurityConfig{
     private final CustomUserDetailService customUserDetailService;
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final MarketRepository marketRepository;
     private final WishService wishService;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -79,7 +81,7 @@ public class CustomSecurityConfig{
          * 인증을 시도하여 인증 결과에 따라 성공 또는 실패를 처리하는 역할을 합니다.
          */
 
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository, wishService);
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(jwtUtil, redisTemplate, memberRepository, marketRepository, wishService);
 
         SocialLoginSuccessHandler socialLoginSuccessHandler = new SocialLoginSuccessHandler(passwordEncoder(), jwtUtil, redisTemplate, memberRepository, wishService);
 
