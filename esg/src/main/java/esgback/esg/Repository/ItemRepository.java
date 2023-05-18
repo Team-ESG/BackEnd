@@ -10,4 +10,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByNameContaining(String keyword);
 
     List<Item> findByExpirationDateAfterAndItemQuantityGreaterThan(LocalDateTime dateTime, int quantity);
+
+    List<Item> findByMarketId(Long marketId);
 }
