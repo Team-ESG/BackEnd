@@ -95,7 +95,6 @@ public class ShoppingCartService {
             Item item = shoppingCartListedItem.getItem();
             WantReserveDto wantReserveDto = new WantReserveDto(item.getId(), shoppingCartListedItem.getShoppingCartListedItemQuantity());
 
-            itemService.reserve(item, shoppingCartListedItem.getShoppingCartListedItemQuantity());
             reserveService.reserve(wantReserveDto, memberId, item.getId());
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         }
