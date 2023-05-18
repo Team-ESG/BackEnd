@@ -98,8 +98,8 @@ public class ReserveController {
 
             reserveService.completeReserve(memberId, reserveId);
             return response.success("구매 성공");
-        } catch (NoResultException e) {
-            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (NoResultException | IllegalArgumentException e) {
+            return response.success(e.getMessage());
         }
     }
 }
