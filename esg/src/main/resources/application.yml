@@ -67,3 +67,15 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
+
+cloud:
+  aws:
+    credentials:
+      accessKey: "${AWS_ACCESS_KEY}"
+      secretKey: "${AWS_SECERT_KEY}"
+    s3:
+      bucket: timeseller-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
