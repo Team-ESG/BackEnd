@@ -64,9 +64,9 @@ public class ReserveService {
         return reserveList;
     }
 
-    public List<Reserve> findByMarketId(String email) throws Exception {
+    public List<Reserve> reservedList(String email) throws Exception {
         Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
-        List<Reserve> reserveList = reserveRepository.findByMarketId(market.getId());
+        List<Reserve> reserveList = reserveRepository.findByMarketIdAndReserveState(market.getId(), ReserveState.RESERVED);
         return reserveList;
     }
 
