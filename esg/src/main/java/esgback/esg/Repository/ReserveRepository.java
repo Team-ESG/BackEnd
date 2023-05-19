@@ -16,4 +16,6 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
     @Query(value = "select r from Reserve r where r.market.id = :marketId")
     List<Reserve> findByMarketId(Long marketId);
+
+    List<Reserve> findByMarketIdAndReserveState(Long marketId, ReserveState reserveState);
 }

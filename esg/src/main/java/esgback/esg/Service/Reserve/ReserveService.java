@@ -105,4 +105,10 @@ public class ReserveService {
 
         member.setDiscountPrice(member.getDiscountPrice() + reserve.getQuantity() * (item.getOriginalPrice() - item.getDiscountPrice()));
     }
+
+    public List<Reserve> completedReserveList(String email) {
+        Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
+
+        return reserveRepository.findByMarketIdAndReserveState(market.getId(), ReserveState.RESERVE_COMPLETE);
+    }
 }

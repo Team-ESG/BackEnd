@@ -60,4 +60,24 @@ public class SellerReserveController {
             return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/seller/reserveList/completed")
+    public ResponseEntity<?> completedReserveList(@RequestHeader("authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+
+            Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
+            String email = String.valueOf(stringObjectMap.get("id"));
+
+            List<Reserve> reserveList = reserveService.completedReserveList(email);
+
+            List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
+                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getItem().getMarket().getId(), reserve.getItem().getMarket().getName(), reserve.getMember().getId(), reserve.getMember().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
+                    .collect(Collectors.toList());
+
+            return response.success(simpleReserveDtoList);
+        } catch (NoResultException e) {
+            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
