@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Read {
+public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
