@@ -2,6 +2,7 @@ package esgback.esg.Service.Item;
 
 import esgback.esg.DTO.Item.RegisterItemDto;
 import esgback.esg.DTO.Item.SimpleItemDto;
+import esgback.esg.DTO.Item.UpdateItemDto;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Market.Market;
 import esgback.esg.Repository.ItemRepository;
@@ -48,5 +49,18 @@ public class SellerItemService {
         return items.stream()
                 .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice(), item.getExpirationDate()))
                 .toList();
+    }
+
+    @Transactional
+    public void updateItemDetail(UpdateItemDto updateItemDto) {
+        Item item = itemRepository.findById(updateItemDto.getItemId()).orElseThrow(() -> new NoResultException("해당 상품은 존재하지 않습니다."));
+
+        item.setName(updateItemDto.getName());
+        item.setExpirationDate(updateItemDto.getExpirationDate());
+        item.setPhotoUrl(updateItemDto.getPhotoUrl());
+        item.setItemDetail(updateItemDto.getItemDetail());
+        item.setOriginalPrice(updateItemDto.getOriginalPrice());
+        item.setDiscountPrice(updateItemDto.getDiscountPrice());
+        item.setItemQuantity(updateItemDto.getItemQuantity());
     }
 }
