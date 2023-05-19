@@ -2,6 +2,7 @@ package esgback.esg.Domain.Reserve;
 
 import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Item.Item;
+import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -28,6 +29,11 @@ public class Reserve {
     @Getter
     private Item item;
 
+    @OneToOne
+    @JoinColumn(name = "market_id")
+    @Getter
+    private Market market;
+
     private LocalDateTime reserveDate;
     private LocalDateTime reserveEndDate;
     @Setter
@@ -40,9 +46,10 @@ public class Reserve {
     private int price;
 
     @Builder
-    public Reserve(Member member, Item item, LocalDateTime reserveDate, LocalDateTime reserveEndDate, ReserveState reserveState, int quantity, int price) {
+    public Reserve(Member member, Item item, Market market, LocalDateTime reserveDate, LocalDateTime reserveEndDate, ReserveState reserveState, int quantity, int price) {
         this.member = member;
         this.item = item;
+        this.market = market;
         this.reserveDate = reserveDate;
         this.reserveEndDate = reserveEndDate;
         this.pickUpDate = null;

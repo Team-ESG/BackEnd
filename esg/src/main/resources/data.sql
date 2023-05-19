@@ -10,23 +10,23 @@ VALUES ('부산광역시', '해운대구', '우동', '1985-05-10', 500, 'member0
 
 INSERT INTO market (ID, FIRST_ADDR, SECOND_ADDR, THIRD_ADDR, EMAIL, END_TIME, NAME, OWNER_NAME, PASSWORD, PHONE_NUMBER,
                     PHOTO_URL, START_TIME)
-VALUES (1, 'Ulsan', 'Namgu', 'asfsaf', 'dltkdgns830@ajou.ac.kr', '2023-04-04 21:00:00.000000', '상훈이네', '이상훈', 'abc',
-        '010-9973-2652', 'abcd.png', '2023-04-04 09:00:00.000000');
+VALUES (1, 'Ulsan', 'Namgu', 'asfsaf', 'dltkdgns830@ajou.ac.kr', '21:00', '상훈이네', '이상훈', 'abc',
+        '010-9973-2652', 'abcd.png', '09:00');
 
 INSERT INTO market (ID, FIRST_ADDR, SECOND_ADDR, THIRD_ADDR, EMAIL, END_TIME, NAME, OWNER_NAME, PASSWORD, PHONE_NUMBER,
                     PHOTO_URL, START_TIME)
-VALUES (2, 'Seoul', 'Bukgu', 'sfsf', 'abcde@ajou.ac.kr', '2023-04-04 21:00:00.000000', '재연이네', '양재연', 'asfsa',
-        '010-2132-2552', 'ad.png', '2023-04-04 09:00:00.000000');
+VALUES (2, 'Seoul', 'Bukgu', 'sfsf', 'abcde@ajou.ac.kr', '21:00', '재연이네', '양재연', 'asfsa',
+        '010-2132-2552', 'ad.png', '09:00');
 
 INSERT INTO market (ID, FIRST_ADDR, SECOND_ADDR, THIRD_ADDR, EMAIL, END_TIME, NAME, OWNER_NAME, PASSWORD, PHONE_NUMBER,
                     PHOTO_URL, START_TIME)
-VALUES (3, 'Suwon', 'paldal', 'asdad', 'sfsfe3@ajou.ac.kr', '2023-04-04 21:00:00.000000', '동우네', '강동우', 'abcdef',
-        '010-9912-2522', 'acd.png', '2023-04-04 09:00:00.000000');
+VALUES (3, 'Suwon', 'paldal', 'asdad', 'sfsfe3@ajou.ac.kr', '21:00', '동우네', '강동우', 'abcdef',
+        '010-9912-2522', 'acd.png', '09:00');
 
 INSERT INTO market (ID, FIRST_ADDR, SECOND_ADDR, THIRD_ADDR, EMAIL, END_TIME, NAME, OWNER_NAME, PASSWORD, PHONE_NUMBER,
                     PHOTO_URL, START_TIME)
-VALUES (4, 'Suwon', 'YeongTong', 'DDONG', 'testd@timeseller', '2023-04-04 21:00:00.000000', '아주대학교', '아콩이', '1234',
-        '010-1412-4212', 'abacd.png', '2023-04-04 09:00:00.000000');
+VALUES (4, 'Suwon', 'YeongTong', 'DDONG', 'testd@timeseller', '21:00', '아주대학교', '아콩이', '1234',
+        '010-1412-4212', 'abacd.png', '09:00');
 
 INSERT INTO item (DISCOUNT_PRICE, EXPIRATION_DATE, ITEM_DETAIL, ITEM_QUANTITY, NAME, ORIGINAL_PRICE, PHOTO_URL,
                   REGISTER_DATE, WISHED_ITEM_ADDED_COUNT, MARKET_ID, RESERVED_QUANTITY)

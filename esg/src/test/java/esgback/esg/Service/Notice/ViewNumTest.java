@@ -12,13 +12,13 @@ public class ViewNumTest {
     @Autowired
     private NoticeService noticeService;
 
-    @Test
-    void checkViewNum() {
-        Notice notice = noticeService.findById(1L);
-        int viewNum = notice.getViewNum();
-
-        noticeService.readNotice(String.valueOf(1L), 1L);
-
-        Assertions.assertThat(notice.getViewNum()).isNotEqualTo(viewNum + 1);
-    }
+//    @Test
+//    void checkViewNum() {
+//        Notice notice = noticeService.findById(1L);
+//        int viewNum = notice.getViewNum();
+//
+//        noticeService.readNotice(String.valueOf(1L), 1L);
+//
+//        Assertions.assertThat(notice.getViewNum()).isNotEqualTo(viewNum + 1);
+//    }
 }

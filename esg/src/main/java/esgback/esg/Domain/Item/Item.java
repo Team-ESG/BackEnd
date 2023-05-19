@@ -5,10 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Setter
 public class Item {
@@ -26,7 +25,7 @@ public class Item {
     private String itemDetail;
     private int originalPrice;
     private int discountPrice;
-    private Date registerDate;
+    private LocalDateTime registerDate;
     private int itemQuantity;
     private int reservedQuantity;
     private int wishedItemAddedCount;

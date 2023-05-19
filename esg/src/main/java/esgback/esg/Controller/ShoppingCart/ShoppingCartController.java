@@ -67,7 +67,7 @@ public class ShoppingCartController {
             shoppingCartService.reserve(memberId);
             return response.success("장바구니 예약 완료");
         } catch (IllegalArgumentException | NoResultException e) {
-            return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
+            return response.success(e.getMessage());
         }
     }
 
