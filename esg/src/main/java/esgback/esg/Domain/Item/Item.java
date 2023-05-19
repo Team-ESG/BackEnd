@@ -31,7 +31,7 @@ public class Item {
     private int wishedItemAddedCount;
 
     @Builder
-    public Item(Long id, Market market, String name, LocalDateTime expirationDate, String photoUrl, String itemDetail, int originalPrice, int discountPrice, Date registerDate, int itemQuantity, int reservedQuantity, int wishedItemAddedCount) {
+    public Item(Long id, Market market, String name, LocalDateTime expirationDate, String photoUrl, String itemDetail, int originalPrice, int discountPrice, LocalDateTime registerDate, int itemQuantity, int reservedQuantity, int wishedItemAddedCount) {
         this.id = id;
         this.market = market;
         this.name = name;

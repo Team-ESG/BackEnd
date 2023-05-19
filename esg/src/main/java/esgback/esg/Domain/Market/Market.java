@@ -35,7 +35,7 @@ public class Market {
     private List<Item> items;
 
     @Builder
-    public Market(Long id, String name, String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName, LocalDateTime startTime, LocalDateTime endTime, List<Item> items) {
+    public Market(Long id, String name, String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName, String startTime, String endTime, List<Item> items) {
         this.id = id;
         this.name = name;
         this.email = email;
