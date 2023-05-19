@@ -30,7 +30,7 @@ public class SellerReserveController {
             Map<String, Object> stringObjectMap = jwtUtil.validateToken(token);
             String email = String.valueOf(stringObjectMap.get("id"));
 
-            List<Reserve> reserveList = reserveService.findByMarketId(email);
+            List<Reserve> reserveList = reserveService.reservedList(email);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
                     .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getItem().getMarket().getId(), reserve.getItem().getMarket().getName(), reserve.getMember().getId(), reserve.getMember().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
