@@ -90,9 +90,10 @@ public class ReserveService {
         }
     }
 
-    public void completeReserve(String memberId, Long reserveId) {
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    public void completeReserve(String email, Long reserveId) {
         Reserve reserve = findById(reserveId);
+        Member member = reserve.getMember();
+        Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
 
         reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
         reserve.setPickUpDate(LocalDateTime.now());
