@@ -22,6 +22,7 @@ public class SellerItemService {
     private final ItemRepository itemRepository;
     private final MarketRepository marketRepository;
 
+    @Transactional
     public void registerItem(String email, RegisterItemDto registerItemDto) {
         Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
 
