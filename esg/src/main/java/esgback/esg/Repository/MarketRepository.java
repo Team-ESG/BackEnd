@@ -8,5 +8,8 @@ import java.util.Optional;
 
 public interface MarketRepository extends JpaRepository<Market, Long> {
     List<Market> findByNameContaining(String keyword);
+
     Optional<Market> findByEmail(String email);
+
+    Market findByPhoneNumber(String phoneNumber);
 }

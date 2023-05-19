@@ -13,4 +13,9 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     List<Reserve> findByMemberId(Long memberId);
 
     List<Reserve> findByReserveStateAndReserveDateBefore(ReserveState reserveState, LocalDateTime time);
+
+    @Query(value = "select r from Reserve r where r.market.id = :marketId")
+    List<Reserve> findByMarketId(Long marketId);
+
+    List<Reserve> findByMarketIdAndReserveState(Long marketId, ReserveState reserveState);
 }

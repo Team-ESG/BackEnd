@@ -15,6 +15,8 @@ public class SimpleReserveDto implements Serializable {
     private final String itemName;
     private final Long marketId;
     private final String marketName;
+    private final Long memberId;
+    private final String memberName;
     private final LocalDateTime reserveDate;
     private final ReserveState isSuccess;
     private final int price;

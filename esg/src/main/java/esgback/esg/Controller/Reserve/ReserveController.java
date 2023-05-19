@@ -6,7 +6,6 @@ import esgback.esg.DTO.Reserve.SuccessReserveDto;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.DTO.Response;
 import esgback.esg.Domain.Reserve.Reserve;
-import esgback.esg.Service.Member.MemberInfoService;
 import esgback.esg.Service.Reserve.ReserveService;
 import esgback.esg.Util.JWTUtil;
 import jakarta.persistence.NoResultException;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 public class ReserveController {
     private final ReserveService reserveService;
     private final Response response;
-    private final MemberInfoService memberInfoService;
     private final JWTUtil jwtUtil;
 
     @PostMapping("/main/item/reserve")
@@ -62,7 +60,7 @@ public class ReserveController {
             List<Reserve> reserveList = reserveService.findByMemberId(memberId);
 
             List<SimpleReserveDto> simpleReserveDtoList = reserveList.stream()
-                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getItem().getMarket().getId(), reserve.getItem().getMarket().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
+                    .map(reserve -> new SimpleReserveDto(reserve.getId(), reserve.getItem().getName(), reserve.getMarket().getId(), reserve.getMarket().getName(), reserve.getMember().getId(), reserve.getMember().getName(), reserve.getReserveDate(), reserve.getReserveState(), reserve.getPrice(), reserve.getQuantity()))
                     .collect(Collectors.toList());
 
             return response.success(simpleReserveDtoList);
