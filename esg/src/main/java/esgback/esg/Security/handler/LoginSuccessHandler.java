@@ -44,6 +44,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String sendData = null;
         String accessToken = null;
         String refreshToken = null;
+        int redisTime = 2592000;
 
         for(Object temp : authentication.getAuthorities()){
             if(temp.toString() == "ROLE_OWNER")
@@ -78,10 +79,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             Map<String, Object> claim = Map.of("id", authentication.getName());
 
-            accessToken = jwtUtil.generateToken(claim, 1000);//유효기간 1일 // test 위해서 일단 1분으로 바꿈
-            refreshToken = jwtUtil.generateToken(claim, 3000);//유효기간 30일 // test 위해서 일단 3분으로 바꿈
+            accessToken = jwtUtil.generateToken(claim, 2);//유효기간 2일
+            refreshToken = jwtUtil.generateToken(claim, 30);//유효기간 30일
 
-            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
+            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, redisTime, TimeUnit.SECONDS);//duration은 초 단위
 
             sendData = gson.toJson(Map.of("info", memberReturnDto, "accessToken", accessToken, "refreshToken", refreshToken));
         }
@@ -92,10 +93,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
             Map<String, Object> claim = Map.of("id", authentication.getName());
 
-            accessToken = jwtUtil.generateToken(claim, 1000);//유효기간 1일 // test 위해서 일단 1분으로 바꿈
-            refreshToken = jwtUtil.generateToken(claim, 3000);//유효기간 30일 // test 위해서 일단 3분으로 바꿈
+            accessToken = jwtUtil.generateToken(claim, 2);//유효기간 2일
+            refreshToken = jwtUtil.generateToken(claim, 30);//유효기간 30일
 
-            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
+            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, redisTime, TimeUnit.SECONDS);//duration은 초 단위
 
             sendData = gson.toJson(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
         }

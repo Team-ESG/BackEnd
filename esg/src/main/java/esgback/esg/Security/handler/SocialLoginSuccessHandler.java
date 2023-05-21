@@ -48,19 +48,21 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> claim = Map.of("id", authentication.getName());
 
         if(!memberLoadUserDto.getSuccess()){
+            int redisTime = 86400;
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             MemberSocialJoinDto memberSocialJoinDto = sendMember(auth);
 
             String accessToken = jwtUtil.generateToken(claim, 1);//유효기간 1일
-            String refreshToken = jwtUtil.generateToken(claim, 3);//유효기간 30일 - //test 때는 3분으로
+            String refreshToken = jwtUtil.generateToken(claim, 30);//유효기간 30일
 
             Map<String, Object> tokenInfo = Map.of("accessToken", accessToken, "refreshToken", refreshToken, "data", memberSocialJoinDto);
-            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
+            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, redisTime, TimeUnit.SECONDS);//duration은 초 단위
             String tokenInfoJson = gson.toJson(tokenInfo);
 
             response.getWriter().println(tokenInfoJson);
         }
         else{
+            int redisTime = 2592000;
             Optional<Member> find = memberRepository.findByMemberId(authentication.getName());
             Member member = find.orElseThrow(() -> new IllegalArgumentException("해당 아이디는 존재하지 않습니다."));
             String phoneNumber = member.getPhoneNumber().substring(0, 3) + "-" + "****" + "-" + member.getPhoneNumber().substring(7);
@@ -86,11 +88,11 @@ public class SocialLoginSuccessHandler implements AuthenticationSuccessHandler {
                     .social(member.getSocial())
                     .build();
 
-            String accessToken = jwtUtil.generateToken(claim, 1);//유효기간 1일
-            String refreshToken = jwtUtil.generateToken(claim, 3);//유효기간 30일 - //test 때는 3분으로
+            String accessToken = jwtUtil.generateToken(claim, 2);//유효기간 2일
+            String refreshToken = jwtUtil.generateToken(claim, 30);//유효기간 30일
 
             String sendData = gson.toJson(Map.of("info", memberReturnDto, "accessToken", accessToken, "refreshToken", refreshToken));
-            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, 180, TimeUnit.SECONDS);//duration은 초 단위
+            redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, redisTime, TimeUnit.SECONDS);//duration은 초 단위
 
             response.getWriter().println(sendData);
         }
