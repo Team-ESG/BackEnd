@@ -103,7 +103,7 @@ public class ShoppingCartService {
     public void delete(String memberId, Long index) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
         ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new NoResultException("장바구니 목록이 존재하지 않습니다."));
-        ShoppingCartListedItem shoppingCartListedItem = shoppingCartListedItemRepository.findByShoppingCartIdAndIndex(shoppingCart.getId(), index);
+        ShoppingCartListedItem shoppingCartListedItem = shoppingCartListedItemRepository.findByShoppingCartIdAndIndexNum(shoppingCart.getId(), index);
 
         shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() - shoppingCartListedItem.getTotalPrice());
         shoppingCartListedItemRepository.delete(shoppingCartListedItem);
