@@ -34,7 +34,7 @@ public class JWTUtil {
                 .setHeader(headers)
                 .setClaims(payloads)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
-                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(time).toInstant()))//test 위해서 일단 분
+                .setExpiration(Date.from(ZonedDateTime.now().plusDays(time).toInstant()))//test 위해서 일단 분
                 .signWith(SignatureAlgorithm.HS256, key.getBytes())//보통 바이트 형식으로 서명
                 .compact();
 
