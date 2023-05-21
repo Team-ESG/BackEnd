@@ -48,7 +48,7 @@ public class ShoppingCartService {
 
         if (shoppingCartListedItem == null) {
             shoppingCartListedItem = ShoppingCartListedItem.createShoppingCartListedItem(shoppingCart, item, shoppingCartRequestDto.getQuantity());
-            shoppingCartListedItem.setIndex(shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId()).size() + 1L);
+            shoppingCartListedItem.setIndexNum(shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId()).size() + 1L);
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         } else {
             shoppingCartListedItem.setShoppingCartListedItemQuantity(shoppingCartRequestDto.getQuantity());
@@ -72,7 +72,7 @@ public class ShoppingCartService {
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
             State isSold = shoppingCartListedItem.getItem().getItemQuantity() == 0 ? State.True : State.False;
-            result.add(new ShoppingCartListedItemDto(shoppingCartListedItem.getIndex(), shoppingCartListedItem.getItem(), shoppingCartListedItem, isSold));
+            result.add(new ShoppingCartListedItemDto(shoppingCartListedItem.getIndexNum(), shoppingCartListedItem.getItem(), shoppingCartListedItem, isSold));
         }
 
         return result;
@@ -110,7 +110,7 @@ public class ShoppingCartService {
 
         Long idx = 1L;
         for (ShoppingCartListedItem s : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
-            s.setIndex(idx);
+            s.setIndexNum(idx);
             idx++;
             shoppingCartListedItemRepository.save(s);
         }
