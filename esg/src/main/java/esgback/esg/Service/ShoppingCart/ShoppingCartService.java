@@ -48,7 +48,7 @@ public class ShoppingCartService {
 
         if (shoppingCartListedItem == null) {
             shoppingCartListedItem = ShoppingCartListedItem.createShoppingCartListedItem(shoppingCart, item, shoppingCartRequestDto.getQuantity());
-            shoppingCartListedItem.setIndex(shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId()).size() + 1L);
+            shoppingCartListedItem.setIndexNum(shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId()).size() + 1L);
             shoppingCartListedItemRepository.save(shoppingCartListedItem);
         } else {
             shoppingCartListedItem.setShoppingCartListedItemQuantity(shoppingCartRequestDto.getQuantity());
@@ -72,7 +72,7 @@ public class ShoppingCartService {
 
         for (ShoppingCartListedItem shoppingCartListedItem : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
             State isSold = shoppingCartListedItem.getItem().getItemQuantity() == 0 ? State.True : State.False;
-            result.add(new ShoppingCartListedItemDto(shoppingCartListedItem.getIndex(), shoppingCartListedItem.getItem(), shoppingCartListedItem, isSold));
+            result.add(new ShoppingCartListedItemDto(shoppingCartListedItem.getIndexNum(), shoppingCartListedItem.getItem(), shoppingCartListedItem, isSold));
         }
 
         return result;
@@ -95,23 +95,22 @@ public class ShoppingCartService {
             Item item = shoppingCartListedItem.getItem();
             WantReserveDto wantReserveDto = new WantReserveDto(item.getId(), shoppingCartListedItem.getShoppingCartListedItemQuantity());
 
-            itemService.reserve(item, shoppingCartListedItem.getShoppingCartListedItemQuantity());
             reserveService.reserve(wantReserveDto, memberId, item.getId());
-            shoppingCartListedItemRepository.save(shoppingCartListedItem);
+            shoppingCartListedItemRepository.delete(shoppingCartListedItem);
         }
     }
 
     public void delete(String memberId, Long index) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new NoResultException("해당 멤버는 존재하지 않습니다."));
         ShoppingCart shoppingCart = shoppingCartRepository.findByMemberId(member.getId()).orElseThrow(() -> new NoResultException("장바구니 목록이 존재하지 않습니다."));
-        ShoppingCartListedItem shoppingCartListedItem = shoppingCartListedItemRepository.findByShoppingCartIdAndIndex(shoppingCart.getId(), index);
+        ShoppingCartListedItem shoppingCartListedItem = shoppingCartListedItemRepository.findByShoppingCartIdAndIndexNum(shoppingCart.getId(), index);
 
         shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() - shoppingCartListedItem.getTotalPrice());
         shoppingCartListedItemRepository.delete(shoppingCartListedItem);
 
         Long idx = 1L;
         for (ShoppingCartListedItem s : shoppingCartListedItemRepository.findByShoppingCartId(shoppingCart.getId())) {
-            s.setIndex(idx);
+            s.setIndexNum(idx);
             idx++;
             shoppingCartListedItemRepository.save(s);
         }

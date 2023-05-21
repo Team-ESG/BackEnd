@@ -3,9 +3,11 @@ package esgback.esg.Service.Reserve;
 import esgback.esg.DTO.Reserve.WantReserveDto;
 import esgback.esg.Domain.Enum.ReserveState;
 import esgback.esg.Domain.Item.Item;
+import esgback.esg.Domain.Market.Market;
 import esgback.esg.Domain.Member.Member;
 import esgback.esg.Domain.Reserve.Reserve;
 import esgback.esg.Repository.ItemRepository;
+import esgback.esg.Repository.MarketRepository;
 import esgback.esg.Repository.MemberRepository;
 import esgback.esg.Repository.ReserveRepository;
 import esgback.esg.Service.Item.ItemService;
@@ -26,6 +28,7 @@ public class ReserveService {
     private final MemberRepository memberRepository;
     private final ReserveRepository reserveRepository;
     private final ItemService itemService;
+    private final MarketRepository marketRepository;
 
     public Reserve reserve(WantReserveDto wantReserveDto, String memberId, Long itemId) {
         Member member = memberRepository.findByMemberId(memberId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -38,6 +41,7 @@ public class ReserveService {
         Reserve updateReserve = Reserve.builder()
                 .member(member)
                 .item(item)
+                .market(item.getMarket())
                 .reserveDate(LocalDateTime.now())
                 .reserveEndDate(LocalDateTime.now().plusMinutes(30))
                 .reserveState(ReserveState.RESERVED)
@@ -57,6 +61,12 @@ public class ReserveService {
 
         if (reserveList.isEmpty()) throw new Exception("예약 내역이 없습니다.");
 
+        return reserveList;
+    }
+
+    public List<Reserve> reservedList(String email) throws Exception {
+        Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
+        List<Reserve> reserveList = reserveRepository.findByMarketIdAndReserveState(market.getId(), ReserveState.RESERVED);
         return reserveList;
     }
 
@@ -80,14 +90,25 @@ public class ReserveService {
         }
     }
 
-    public void completeReserve(Long reserveId) {
+    public void completeReserve(String email, Long reserveId) {
         Reserve reserve = findById(reserveId);
+        Member member = reserve.getMember();
+        Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
 
         reserve.setReserveState(ReserveState.RESERVE_COMPLETE);
+        reserve.setPickUpDate(LocalDateTime.now());
         reserveRepository.save(reserve);
 
         Item item = reserve.getItem();
         item.setReservedQuantity(item.getReservedQuantity() - reserve.getQuantity());
         itemRepository.save(item);
+
+        member.setDiscountPrice(member.getDiscountPrice() + reserve.getQuantity() * (item.getOriginalPrice() - item.getDiscountPrice()));
+    }
+
+    public List<Reserve> completedReserveList(String email) {
+        Market market = marketRepository.findByEmail(email).orElseThrow(() -> new NoResultException("해당 가게는 존재하지 않습니다."));
+
+        return reserveRepository.findByMarketIdAndReserveState(market.getId(), ReserveState.RESERVE_COMPLETE);
     }
 }

@@ -1,20 +1,20 @@
 package esgback.esg.Domain.Market;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import esgback.esg.Domain.Item.Item;
 import esgback.esg.Domain.Member.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class Market {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,19 +28,48 @@ public class Market {
     private Address address;
     private String ownerName;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalDateTime startTime;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalDateTime endTime;
+    private String startTime;
+    private String endTime;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "market")
     private List<Item> items;
 
+    @Builder
+    public Market(Long id, String name, String email, String password, String phoneNumber, String photoUrl, Address address, String ownerName, String startTime, String endTime, List<Item> items) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.photoUrl = photoUrl;
+        this.address = address;
+        this.ownerName = ownerName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.items = items;
+    }
+
+
     public void addItem(Item item) {
         items.add(item);
         item.setMarket(this);
+    }
+
+    public static Market updatePhoto(Market market, String photoUrl) {
+        Market newMarket = Market.builder()
+                .id(market.getId())
+                .name(market.getName())
+                .email(market.getEmail())
+                .password(market.getPassword())
+                .phoneNumber(market.getPhoneNumber())
+                .photoUrl(photoUrl)
+                .address(market.getAddress())
+                .ownerName(market.getOwnerName())
+                .startTime(market.getStartTime())
+                .endTime(market.getEndTime())
+                .items(market.getItems())
+                .build();
+
+        return newMarket;
     }
 }

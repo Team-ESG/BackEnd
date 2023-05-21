@@ -5,10 +5,11 @@ spring:
     init:
       mode: always
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: "${RDS_URL}"
+    username: "${RDS_USERNAME}"
+    password: "${RDS_PASSWORD}"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   security:
     oauth2:
       client:
@@ -17,7 +18,7 @@ spring:
             client-name: kakao
             scope: profile_nickname, account_email, birthday, gender
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://52.78.81.8:8080/login/oauth2/code/kakao
             client-id: "${KAKAO_REST_KEY}"
             client-secret: "${KAKAO_CLIENT_SECRET_KEY}"
             client-authentication-method: POST
@@ -26,7 +27,7 @@ spring:
             client-name: Naver
             scope: name, email, nickname, gender, birthday
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: http://52.78.81.8:8080/login/oauth2/code/naver
             client-id: "${NAVER_CLIENT_ID}"
             client-secret: "${NAVER_CLIENT_SECRET}"
 
@@ -45,13 +46,13 @@ spring:
 
 
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
       #      show_sql: true
       format_sql: true
+    defer-datasource-initialization: true
 
 logging.level:
   org.hibernate.SQL: debug
@@ -66,3 +67,15 @@ server:
       enabled: true
   tomcat:
     uri-encoding: UTF-8
+
+cloud:
+  aws:
+    credentials:
+      accessKey: "${AWS_ACCESS_KEY}"
+      secretKey: "${AWS_SECERT_KEY}"
+    s3:
+      bucket: timeseller-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

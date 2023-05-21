@@ -38,7 +38,7 @@ public class SearchService {
         if (itemList.isEmpty()) throw new NoResultException("검색 결과가 없습니다.");
         else {
             List<SimpleItemDto> result = itemList.stream()
-                    .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice()))
+                    .map(item -> new SimpleItemDto(item.getId(), item.getMarket().getName(), item.getName(), item.getPhotoUrl(), item.getDiscountPrice(), item.getOriginalPrice(), item.getExpirationDate()))
                     .toList();
             return result;
         }
