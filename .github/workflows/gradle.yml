@@ -24,18 +24,9 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        
-    - name: Move to project Direcotory
-      run: cd esg
       
     - name: check
       run : ls
-      
-    - name: Move to project Directory
-      run: cd esg
-      
-    - name: check
-      run: ls
         
     - name: Grant excute permission for gradlew
       run: chmod +x ./gradlew
