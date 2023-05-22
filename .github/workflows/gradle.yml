@@ -26,15 +26,12 @@ jobs:
         distribution: 'temurin'
         
     - name: Move to project Direcotory
-      run: cd esg
-      
-    - name: check
-      run: ls
+      run: cd esg/esg
         
     - name: Grant excute permission for gradlew
-      run: chmod +x ./esg/gradlew
+      run: chmod +x ./gradlew
       shell: bash
       
     - name: Build with Gradle
-      run: ./esg/gradlew build
+      run: ./gradlew build
       shell: bash
