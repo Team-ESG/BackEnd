@@ -29,7 +29,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Grant excute permission for gradlew
-      run: chmod +x ../esg/gradlew
+      run: chmod +x ../esg/src/gradlew
     - name: Build with Gradle
       # uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       # with:
