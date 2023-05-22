@@ -24,6 +24,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        path: /esg
         
     - name: Grant excute permission for gradlew
       run: chmod +x ./esg/gradlew
