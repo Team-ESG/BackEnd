@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: CheckOut Repository
     - uses: actions/checkout@v3
-    - with:
+      with:
         path: ./esg
     
     - name: Set up JDK 17
