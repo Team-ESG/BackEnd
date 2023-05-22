@@ -29,9 +29,6 @@ jobs:
       run: chmod +x ./esg/gradlew
       shell: bash
       
-    - name: check
-      run : ls
-      
     - name: Build with Gradle
       run: ./esg/gradlew build
       shell: bash
