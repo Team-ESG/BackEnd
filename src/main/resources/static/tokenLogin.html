@@ -14,7 +14,7 @@
     generateTokenBtn.addEventListener('click', () => {
         const data = { id: 'member01', pwd: '1234' };
 
-        axios.post('http://localhost:8080/login', data)
+        axios.post('http://52.78.81.8:8080/login', data)
             .then(response => {
                 alert('Token generated successfully!');
 

@@ -26,8 +26,8 @@
 <script>
 
 
-  const oldAccessToken = null
-  const oldRefreshToken = null
+  const oldAccessToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJhbGdvIjoiSFMyNTYifQ.eyJleHAiOjE2ODQ1MjMwNjAsImlhdCI6MTY4NDQ2MzA2MCwiaWQiOiJtZW1iZXIwMSJ9.K4C14_glzWVzoZiGl_1k96PEA5Pd7er0optMM6_h31U"
+  const oldRefreshToken = "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYiLCJhbGdvIjoiSFMyNTYifQ.eyJleHAiOjE2ODQ2NDMwNjAsImlhdCI6MTY4NDQ2MzA2MCwiaWQiOiJtZW1iZXIwMSJ9.VJVtp0HUqC5BacY4NBhbe3vvaFKz3GHk_z14lnWqtL0"
 
   document.querySelector(".accessOld").innerHTML = oldAccessToken
   document.querySelector(".refreshOld").innerHTML = oldRefreshToken
@@ -37,7 +37,7 @@
   document.querySelector(".btn1").addEventListener("click", () => {
 
 
-    axios.post('http://localhost:8080/autoLogin',
+    axios.post('http://52.78.81.8:8080/autoLogin',
             {accessToken: oldAccessToken, refreshToken: oldRefreshToken})
             .then(res => {
               console.log(res.data)
