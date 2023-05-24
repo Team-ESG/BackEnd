@@ -30,7 +30,7 @@ public class S3Util {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public void uploadMarketImg(MultipartFile multipartFile, String authorization) throws IOException {
+    public String uploadMarketImg(MultipartFile multipartFile, String authorization) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
         String token = authorization.substring(7);
 
@@ -50,12 +50,11 @@ public class S3Util {
         Market newMarket = Market.updatePhoto(market, photoUrl);
 
         marketRepository.save(newMarket);
+
+        return photoUrl;
     }
 
-    public void uploadItemImg(MultipartFile multipartFile, Long itemId) throws IOException {
-        Optional<Item> find = itemRepository.findById(itemId);
-        Item item = find.orElseThrow(() -> new IllegalArgumentException("해당 상품은 존재하지 않습니다."));
-
+    public String uploadItemImg(MultipartFile multipartFile) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -65,7 +64,6 @@ public class S3Util {
         amazonS3Client.putObject(bucket, fileName, multipartFile.getInputStream(), metadata);
         String photoUrl = amazonS3Client.getUrl(bucket, fileName).toString();//저장된 사진 url인데 이것을 디비에 저장하면 되겠다
 
-        Item newItem = Item.updateItemImg(item, photoUrl);
-        itemRepository.save(newItem);
+        return photoUrl;
     }
 }
