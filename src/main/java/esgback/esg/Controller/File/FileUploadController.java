@@ -24,20 +24,20 @@ public class FileUploadController {
     @PostMapping("/auth/upload/market")
     public ResponseEntity<?> uploadMarket(@RequestParam("file") MultipartFile multipartFile, @RequestHeader("authorization") String authorization) {
         try {
-            s3Util.uploadMarketImg(multipartFile, authorization);
+            String url = s3Util.uploadMarketImg(multipartFile, authorization);
 
-            return response.success("success");
+            return response.success(url, "success", HttpStatus.OK);
         } catch (Exception e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping("/auth/upload/{itemId}")
-    public ResponseEntity<?> uploadItem(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long itemId){
+    @PostMapping("/auth/upload/item")
+    public ResponseEntity<?> uploadItem(@RequestParam("file") MultipartFile multipartFile){
         try {
-            s3Util.uploadItemImg(multipartFile, itemId);
+            String url = s3Util.uploadItemImg(multipartFile);
 
-            return response.success("success");
+            return response.success(url, "success", HttpStatus.OK);
         } catch (Exception e) {
             return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
