@@ -1,6 +1,8 @@
 package esgback.esg.Security.handler;
 
 import com.google.gson.Gson;
+import esgback.esg.DTO.Market.MarketDto;
+import esgback.esg.DTO.Market.MarketReturnDto;
 import esgback.esg.DTO.Market.SimpleMarketDto;
 import esgback.esg.DTO.Member.MemberReturnDto;
 import esgback.esg.Domain.Market.Market;
@@ -96,9 +98,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             accessToken = jwtUtil.generateToken(claim, 2);//유효기간 2일
             refreshToken = jwtUtil.generateToken(claim, 30);//유효기간 30일
 
+            MarketReturnDto marketReturnDto = MarketReturnDto.builder()
+                    .name(market.getName())
+                    .phoneNumber(market.getPhoneNumber())
+                    .photoUrl(market.getPhotoUrl())
+                    .address(market.getAddress())
+                    .startTime(market.getStartTime())
+                    .endTime(market.getEndTime())
+                    .build();
+
             redisTemplate.opsForValue().set("RT_" + authentication.getName(), refreshToken, redisTime, TimeUnit.SECONDS);//duration은 초 단위
 
-            sendData = gson.toJson(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
+            sendData = gson.toJson(Map.of("info", marketReturnDto,"accessToken", accessToken, "refreshToken", refreshToken));
         }
 
         try {
