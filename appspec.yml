@@ -9,8 +9,8 @@ permissions:
   - object: /
     pattern: "**"
 
-hooks:
-  ApplicationStart:
-    - location: /deploy.sh
-      timeout: 60
-      runas: ubuntu
+#hooks:
+#  ApplicationStart:
+#    - location: /deploy.sh
+#      timeout: 60
+#      runas: ubuntu
